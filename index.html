@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farhad - Frontend Developer Portfolio</title>
     <style>
-        /* --- CSS Variables for Black & White Themes --- */
+        /* --- CSS Variables for Black & White Themes with Subtle Accents --- */
         :root {
             --backgroundColor: #f4f4f4; /* Light Grey Background */
             --textColor: #1a1a1a; /* Dark Text */
@@ -14,6 +14,13 @@
             --cardBackground: #ffffff; /* White Card Background */
             --headerBackground: rgba(255, 255, 255, 0.9); /* Semi-transparent White Header */
             --dividerColor: #ddd; /* Light Divider */
+
+            /* Code syntax colors (can be customized, keep them subtle/monochrome-friendly) */
+            --codeKeywordColor: #007bff; /* Blue-ish */
+            --codeStringColor: #28a745; /* Green-ish */
+            --codeCommentColor: #6c757d; /* Grey */
+            --codeDefaultColor: #333; /* Default code text */
+            --codeCursorColor: #333; /* Cursor color */
         }
 
         body.darkMode {
@@ -23,7 +30,14 @@
             --secondaryAccentColor: #666; /* Medium Grey for Borders/Details */
             --cardBackground: #333333; /* Dark Grey Card Background */
             --headerBackground: rgba(26, 26, 26, 0.9); /* Semi-transparent Dark Header */
-             --dividerColor: #444; /* Dark Divider */
+            --dividerColor: #444; /* Dark Divider */
+
+             /* Code syntax colors for dark mode */
+            --codeKeywordColor: #61afef; /* Softer Blue */
+            --codeStringColor: #98c379; /* Softer Green */
+            --codeCommentColor: #5c6370; /* Softer Grey */
+            --codeDefaultColor: #f4f4f4; /* Default code text */
+            --codeCursorColor: #f4f4f4; /* Cursor color */
         }
 
         /* --- Base Styles --- */
@@ -34,55 +48,61 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif; /* Minimalist font */
+            font-family: 'Arial', sans-serif; /* Or import a clean monospace/sans-serif font */
             background-color: var(--backgroundColor);
             color: var(--textColor);
             line-height: 1.6;
             transition: background-color 0.6s ease, color 0.6s ease; /* Smooth theme change */
             overflow-x: hidden; /* Prevent horizontal scroll */
-            position: relative; /* Needed for background positioning */
+            position: relative;
             min-height: 100vh;
         }
 
-        /* --- Abstract Background Animation --- */
+         a {
+             color: var(--primaryAccentColor);
+             text-decoration: none;
+             transition: color 0.3s ease;
+         }
+         a:hover {
+             color: var(--secondaryAccentColor);
+         }
+
+        /* --- Parallax Background Animation --- */
         .backgroundContainer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Send to back */
+            z-index: -2; /* Further back */
             overflow: hidden;
             background: var(--backgroundColor); /* Background color follows theme */
             transition: background-color 0.6s ease;
         }
 
-        .backgroundShape {
+        .backgroundLayer {
             position: absolute;
-            width: 150px;
-            height: 150px;
-            background-color: var(--secondaryAccentColor);
-            opacity: 0.05; /* Very subtle */
-            animation: moveShape linear infinite;
-            pointer-events: none;
-            border-radius: 50%; /* Example: Use circles */
+            width: 100%;
+            height: 100%;
+            /* These will be moved by JS based on scroll */
+             transform: translateZ(0); /* Optimize for transform animations */
+             will-change: transform;
         }
 
-         /* Example shapes - adjust positions, sizes, animations */
-        .shapeOne { top: 10%; left: 5%; animation-duration: 100s; width: 200px; height: 200px; }
-        .shapeTwo { top: 40%; left: 90%; animation-duration: 120s; width: 180px; height: 180px; border-radius: 0; /* Example: Square */ }
-        .shapeThree { top: 80%; left: 20%; animation-duration: 110s; width: 160px; height: 160px; }
-        .shapeFour { top: 5%; left: 70%; animation-duration: 130s; width: 220px; height: 220px; border-radius: 0; }
-        .shapeFive { top: 70%; left: 50%; animation-duration: 90s; width: 190px; height: 190px; }
-
-
-        @keyframes moveShape {
-            0% { transform: translate(0, 0) rotate(0deg); }
-            25% { transform: translate(50vw, 20vh) rotate(90deg); }
-            50% { transform: translate(0, 40vh) rotate(180deg); }
-            75% { transform: translate(-50vw, 20vh) rotate(270deg); }
-            100% { transform: translate(0, 0) rotate(360deg); }
+         /* Example Layers - Adjust opacity, type of shapes/patterns, and JS scroll speed */
+        .layerOne {
+             background-image: radial-gradient(circle, var(--secondaryAccentColor) 1px, transparent 1px);
+             background-size: 20px 20px;
+             opacity: 0.1;
+             z-index: -1;
         }
+        .layerTwo {
+             background-image: linear-gradient(to right, var(--secondaryAccentColor) 1px, transparent 1px), linear-gradient(to bottom, var(--secondaryAccentColor) 1px, transparent 1px);
+             background-size: 50px 50px;
+             opacity: 0.05;
+             z-index: -1;
+        }
+         /* Add more layers with different patterns/opacities/sizes */
 
 
         /* --- Header and Navigation --- */
@@ -188,16 +208,17 @@
         }
 
         .contentSection {
-            padding: 6rem 0; /* More padding for visual separation */
-            min-height: 100vh; /* Make sections at least viewport height */
+            padding: 8rem 0; /* More padding */
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Center content vertically */
+            justify-content: center;
+            position: relative; /* Needed for layering within section if needed */
         }
 
         .sectionTitle {
             text-align: center;
-            font-size: 2.5rem;
+            font-size: 3rem; /* Larger title */
             margin-bottom: 3rem;
             color: var(--primaryAccentColor);
             position: relative;
@@ -210,8 +231,8 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
+            width: 100px; /* Wider underline */
+            height: 4px; /* Thicker underline */
             background-color: var(--secondaryAccentColor);
             border-radius: 3px;
         }
@@ -220,18 +241,18 @@
         /* --- Home Section (Hero) --- */
         .heroSection {
             text-align: center;
-            padding-top: 8rem; /* Extra padding to clear sticky header */
-            min-height: calc(100vh - 80px); /* Adjust height */
+            padding-top: 10rem; /* Extra padding to clear sticky header */
+            min-height: calc(100vh - 80px);
         }
 
         .heroSection h1 {
-            font-size: 3.5rem;
+            font-size: 4rem; /* Larger hero title */
             margin-bottom: 1rem;
             color: var(--primaryAccentColor);
         }
 
          .heroSection p {
-            font-size: 1.5rem;
+            font-size: 1.6rem; /* Larger hero subtitle */
             margin-bottom: 2rem;
             color: var(--textColor);
          }
@@ -240,76 +261,131 @@
             display: inline-block;
             background-color: var(--primaryAccentColor);
             color: var(--backgroundColor); /* Text color is opposite of accent */
-            padding: 0.8rem 2rem;
+            padding: 1rem 2.5rem; /* Larger button */
             text-decoration: none;
             border-radius: 5px;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
             border: none;
             cursor: pointer;
+            font-weight: bold;
         }
 
         .ctaButton:hover {
             background-color: var(--secondaryAccentColor);
             color: var(--backgroundColor);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px); /* More pronounced hover effect */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
-        /* --- About Section --- */
+        /* --- About Section (Typing Animation) --- */
          .aboutContent {
             display: flex;
             flex-wrap: wrap;
-            gap: 2rem;
-            align-items: flex-start; /* Align items to top */
-            justify-content: center;
+            gap: 4rem; /* Larger gap */
+            align-items: flex-start;
+            justify-content: space-between; /* Space out text and skills */
          }
          .aboutText {
             flex: 2;
             min-width: 300px;
+            font-size: 1.1rem;
          }
          .aboutSkills {
             flex: 1;
-            min-width: 200px;
+            min-width: 250px; /* Wider skills section */
             border-left: 1px solid var(--dividerColor); /* Visual separation */
-            padding-left: 2rem;
+            padding-left: 4rem; /* Larger padding */
          }
          .aboutSkills h3 {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem; /* More space */
             color: var(--primaryAccentColor);
+            font-size: 1.8rem;
          }
          .skillList {
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 0.8rem;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem; /* Larger gap */
          }
          .skillItem {
             background-color: var(--cardBackground);
-            padding: 0.8rem;
+            padding: 1rem; /* Larger padding */
             border-radius: 5px;
             text-align: center;
             border: 1px solid var(--secondaryAccentColor);
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease, border-color 0.6s ease;
+             font-weight: bold;
          }
          .skillItem:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px); /* More pronounced hover effect */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+         }
+
+        /* Typing Animation Specific Styles */
+         .aboutCodeBlock {
+             font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace; /* Monospace font for code */
+             white-space: pre-wrap; /* Respect newlines and wrap text */
+             word-break: break-word;
+             background-color: var(--cardBackground);
+             padding: 2rem;
+             border-radius: 8px;
+             border: 1px solid var(--secondaryAccentColor);
+             line-height: 1.8;
+             margin-bottom: 2rem;
+             overflow: hidden; /* Hide text initially */
+             position: relative; /* For cursor */
+             transition: background-color 0.6s ease, border-color 0.6s ease;
+         }
+
+         .aboutCodeBlock span {
+            opacity: 0; /* Hide text initially */
+            transition: opacity 0s; /* No transition during typing */
+         }
+          .aboutCodeBlock span.visible {
+             opacity: 1; /* Show text */
+             transition: opacity 0.05s linear; /* Quick reveal */
+          }
+
+         /* Syntax Highlighting Classes (for JS to add) */
+         .aboutCodeBlock .keyword { color: var(--codeKeywordColor); font-weight: bold; }
+         .aboutCodeBlock .string { color: var(--codeStringColor); }
+         .aboutCodeBlock .comment { color: var(--codeCommentColor); font-style: italic; }
+         .aboutCodeBlock .default { color: var(--codeDefaultColor); }
+
+
+         /* Blinking cursor */
+         .aboutCodeBlock::after {
+             content: '_'; /* Cursor character */
+             display: inline;
+             color: var(--codeCursorColor);
+             animation: blink 0.7s infinite steps(1);
+             font-weight: normal;
+         }
+          .aboutCodeBlock.typingComplete::after {
+              content: ''; /* Remove cursor after typing */
+              animation: none;
+          }
+
+
+         @keyframes blink {
+             0%, 100% { opacity: 1; }
+             50% { opacity: 0; }
          }
 
 
         /* --- Projects Section --- */
         .projectGrid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly wider cards */
+            gap: 3rem; /* Larger gap */
         }
 
         .projectCard {
             background-color: var(--cardBackground);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease;
             border: 1px solid var(--secondaryAccentColor);
             display: flex;
@@ -317,8 +393,8 @@
         }
 
         .projectCard:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-12px); /* More pronounced hover */
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
         }
 
         .projectImageContainer {
@@ -327,8 +403,8 @@
         }
         .projectImage {
             width: 100%;
-            height: 200px; /* Fixed height for consistency */
-            object-fit: cover; /* Cover container */
+            height: 220px; /* Slightly taller image height */
+            object-fit: cover;
             transition: transform 0.5s ease;
         }
         .projectCard:hover .projectImage {
@@ -336,34 +412,35 @@
         }
 
         .projectInfo {
-            padding: 1.5rem;
-            flex-grow: 1; /* Make info section take available space */
+            padding: 2rem; /* Larger padding */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
 
         .projectTitle {
-            font-size: 1.5rem;
-            margin-bottom: 0.8rem;
+            font-size: 1.6rem; /* Larger title */
+            margin-bottom: 1rem;
             color: var(--primaryAccentColor);
         }
 
         .projectDescription {
-            margin-bottom: 1rem;
-            flex-grow: 1; /* Push links to bottom */
+            margin-bottom: 1.5rem; /* More space */
+            flex-grow: 1;
         }
 
         .projectLinks a {
             display: inline-block;
-            margin-right: 1rem;
+            margin-right: 1.5rem; /* Larger margin */
             color: var(--secondaryAccentColor);
             text-decoration: none;
             font-weight: bold;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.2s ease;
         }
 
         .projectLinks a:hover {
             color: var(--primaryAccentColor);
+             transform: translateY(-2px);
         }
 
 
@@ -371,40 +448,41 @@
          .experienceItem {
             background-color: var(--cardBackground);
             border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
+            padding: 2rem; /* Larger padding */
+            margin-bottom: 2.5rem; /* More space */
             border: 1px solid var(--secondaryAccentColor);
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease, border-color 0.6s ease;
+            position: relative; /* For potential timeline effects */
          }
          .experienceItem:hover {
-            transform: translateX(10px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateX(15px); /* More pronounced slide */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
          }
          .experienceTitle {
-            font-size: 1.3rem;
+            font-size: 1.5rem; /* Larger title */
             color: var(--primaryAccentColor);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
          }
          .experienceSubtitle {
-             font-size: 1rem;
+             font-size: 1.1rem; /* Slightly larger subtitle */
              color: var(--textColor);
              opacity: 0.9;
              margin-bottom: 0.5rem;
          }
          .experienceDate {
-            font-size: 0.9rem;
+            font-size: 1rem; /* Slightly larger date */
             color: var(--textColor);
             opacity: 0.8;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem; /* More space */
          }
           .experienceItem ul {
               list-style: disc;
-              margin-left: 1.5rem;
+              margin-left: 1.8rem; /* More indent */
               color: var(--textColor);
               opacity: 0.9;
           }
            .experienceItem ul li {
-               margin-bottom: 0.5rem;
+               margin-bottom: 0.8rem; /* More space between list items */
            }
 
 
@@ -413,25 +491,26 @@
             text-align: center;
         }
         .contactInfo p {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+            font-size: 1.3rem; /* Larger text */
+            margin-bottom: 1.5rem; /* More space */
         }
          .contactInfo a {
              color: var(--primaryAccentColor);
              text-decoration: none;
              font-weight: bold;
-             transition: color 0.3s ease;
+             transition: color 0.3s ease, transform 0.2s ease;
          }
          .contactInfo a:hover {
              color: var(--secondaryAccentColor);
+             transform: translateY(-2px);
          }
 
 
         /* --- Footer --- */
         .siteFooter {
             text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
+            padding: 3rem; /* More padding */
+            margin-top: 4rem; /* More space */
             border-top: 1px solid var(--dividerColor);
             color: var(--textColor);
             opacity: 0.7;
@@ -441,8 +520,9 @@
         /* --- Scroll Animation Classes --- */
         .animateOnScroll {
             opacity: 0;
-            transform: translateY(30px); /* Start slightly below */
+            transform: translateY(50px); /* Start further below */
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+             will-change: opacity, transform; /* Performance hint */
         }
 
         .animateOnScroll.isAnimated {
@@ -453,129 +533,177 @@
         /* --- Mobile Navigation Animation --- */
         @media (max-width: 768px) {
             .siteHeader {
-                padding: 1rem;
+                padding: 0.8rem 1rem; /* Adjust padding */
             }
+            .siteLogo {
+                font-size: 1.5rem;
+            }
+            .themeToggle {
+                font-size: 1.3rem;
+                 margin-left: 0.8rem;
+            }
+             .menuToggle {
+                 font-size: 1.8rem;
+             }
+
             .navList {
-                display: flex; /* Keep display flex */
+                display: flex;
                 flex-direction: column;
                 position: absolute;
-                top: 100%; /* Position right below the header */
+                top: 100%;
                 left: 0;
                 width: 100%;
-                background-color: var(--headerBackground); /* Same as header */
+                background-color: var(--headerBackground);
                 border-bottom: 1px solid var(--dividerColor);
-                padding: 0; /* Remove padding */
-                overflow: hidden; /* Hide overflowing content during transition */
+                padding: 0;
+                overflow: hidden;
 
-                 /* Animation using max-height */
-                 max-height: 0; /* Start collapsed */
-                 transition: max-height 0.5s ease-out; /* Smooth transition */
-                 z-index: 99; /* Below header but above content */
+                 max-height: 0;
+                 transition: max-height 0.5s ease-out;
+                 z-index: 99;
             }
 
              .navList.navOpen {
-                 max-height: 500px; /* Sufficient height to reveal all items */
-                 padding: 1rem 0; /* Add padding when open */
+                 max-height: 600px; /* Increased height */
+                 padding: 0.5rem 0; /* Adjust padding */
              }
 
             .navItem {
-                margin: 0; /* Remove horizontal margin */
+                margin: 0;
                 text-align: center;
-                padding: 0.8rem 0; /* Add vertical padding to items */
-                 border-bottom: 1px solid var(--dividerColor); /* Separator line */
+                padding: 0.6rem 0; /* Adjust padding */
+                 border-bottom: 1px solid var(--dividerColor);
             }
              .navItem:last-child {
-                 border-bottom: none; /* No border for the last item */
+                 border-bottom: none;
              }
 
             .navLink {
-                 padding: 0.5rem 0; /* Adjust link padding */
-            }
-             .navLink::after {
-                 bottom: -2px; /* Adjust underline position */
-             }
-
-
-            .menuToggle {
-                display: block; /* Show on mobile */
+                 padding: 0.3rem 0; /* Adjust link padding */
+                 font-size: 1rem;
             }
 
-             .themeToggle {
-                 margin-left: 1rem; /* Adjust spacing */
-             }
 
             .mainContent {
-                padding: 1rem; /* Reduce padding */
+                padding: 0.8rem; /* Reduce padding */
             }
 
              .contentSection {
-                 padding: 4rem 0; /* Reduce vertical padding */
-                 min-height: auto; /* Allow sections to be shorter than viewport */
+                 padding: 5rem 0; /* Adjust vertical padding */
+                 min-height: auto;
              }
 
             .heroSection {
-                 padding-top: 6rem; /* Adjust padding */
-                 min-height: auto; /* Allow shorter height */
+                 padding-top: 5rem; /* Adjust padding */
+                 min-height: auto;
             }
 
             .heroSection h1 {
-                font-size: 2.5rem;
+                font-size: 3rem; /* Adjust font size */
             }
              .heroSection p {
-                 font-size: 1.2rem;
+                 font-size: 1.3rem; /* Adjust font size */
              }
 
             .sectionTitle {
-                font-size: 2rem;
+                font-size: 2.3rem; /* Adjust font size */
                 margin-bottom: 2rem;
             }
 
              .aboutContent {
-                flex-direction: column; /* Stack elements */
+                flex-direction: column;
+                gap: 3rem; /* Adjust gap */
              }
              .aboutText {
                  min-width: auto;
                  width: 100%;
-                 padding-right: 0; /* Remove padding */
              }
              .aboutSkills {
                 min-width: auto;
                 width: 100%;
-                border-left: none; /* Remove border */
-                padding-left: 0; /* Remove padding */
-                margin-top: 2rem; /* Add space */
-                 border-top: 1px solid var(--dividerColor); /* Add top border */
-                 padding-top: 2rem;
+                border-left: none;
+                 border-top: 1px solid var(--dividerColor);
+                 padding-left: 0;
+                 padding-top: 3rem; /* Adjust padding */
+             }
+             .aboutSkills h3 {
+                 font-size: 1.6rem;
+             }
+             .skillList {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Adjust min width */
+                gap: 0.6rem; /* Adjust gap */
+             }
+             .skillItem {
+                padding: 0.6rem; /* Adjust padding */
+                font-size: 0.9rem;
+             }
+
+             .aboutCodeBlock {
+                 padding: 1.5rem; /* Adjust padding */
+                 font-size: 0.9rem; /* Smaller font size */
              }
 
 
              .projectGrid {
-                 grid-template-columns: 1fr; /* Single column */
+                 grid-template-columns: 1fr;
+                 gap: 2rem;
              }
 
              .projectCard {
-                 flex-direction: column; /* Stack image and info */
+                 flex-direction: column;
              }
              .projectImage {
-                 height: 180px; /* Smaller image height */
+                 height: 160px; /* Smaller image height */
              }
              .projectInfo {
-                 padding: 1rem;
+                 padding: 1.5rem; /* Adjust padding */
              }
              .projectTitle {
-                 font-size: 1.3rem;
+                 font-size: 1.4rem; /* Adjust font size */
              }
+              .projectDescription {
+                  font-size: 0.9rem;
+              }
+             .projectLinks a {
+                  font-size: 0.9rem;
+                  margin-right: 1rem;
+             }
+
+             .experienceItem {
+                 padding: 1.5rem; /* Adjust padding */
+                 margin-bottom: 2rem; /* Adjust margin */
+             }
+             .experienceTitle {
+                 font-size: 1.3rem; /* Adjust font size */
+             }
+              .experienceSubtitle, .experienceDate {
+                   font-size: 0.9rem; /* Adjust font size */
+              }
+              .experienceItem ul {
+                  margin-left: 1.5rem; /* Adjust indent */
+                  font-size: 0.9rem;
+              }
+
+              .contactInfo p {
+                  font-size: 1.1rem; /* Adjust font size */
+                  margin-bottom: 1rem;
+              }
+              .contactInfo a {
+                   font-size: 1.1rem;
+              }
+
+              .siteFooter {
+                  padding: 2rem; /* Adjust padding */
+                  margin-top: 3rem;
+                  font-size: 0.9rem;
+              }
         }
     </style>
 </head>
 <body>
 
     <div class="backgroundContainer">
-        <div class="backgroundShape shapeOne"></div>
-        <div class="backgroundShape shapeTwo"></div>
-        <div class="backgroundShape shapeThree"></div>
-        <div class="backgroundShape shapeFour"></div>
-        <div class="backgroundShape shapeFive"></div>
+        <div class="backgroundLayer layerOne" data-speed="0.1"></div> <div class="backgroundLayer layerTwo" data-speed="0.05"></div>
          </div>
 
     <header class="siteHeader">
@@ -602,24 +730,37 @@
             <h2 class="sectionTitle">About Me</h2>
             <div class="aboutContent">
                 <div class="aboutText">
-                    <p>
-                        As a dedicated frontend developer, I specialize in building responsive and engaging user interfaces. I love bringing ideas to life using clean, efficient code and a strong understanding of user experience. My goal is to create websites that not only look stunning but are also intuitive and accessible for everyone.
-                    </p>
-                    <p>
-                         I am constantly learning and exploring new technologies to stay at the forefront of web development. Let's build something amazing together!
-                    </p>
+                     <div class="aboutCodeBlock">
+                         <span class="comment">// About Farhad</span>
+                         <span class="default"><br><br>const </span><span class="keyword">farhad</span><span class="default"> = {<br></span>
+                         <span class="default">&nbsp;&nbsp;title: </span><span class="string">'Frontend Developer'</span><span class="default">,<br></span>
+                         <span class="default">&nbsp;&nbsp;location: </span><span class="string">'Earth, Solar System'</span><span class="default">, </span><span class="comment">// Sometimes feels like Mars</span>
+                         <span class="default"><br>&nbsp;&nbsp;skills: [</span><span class="string">'HTML'</span><span class="default">, </span><span class="string">'CSS'</span><span class="default">, </span><span class="string">'JavaScript'</span><span class="default">, </span><span class="string">'React'</span><span class="default">, </span><span class="string">'Vue'</span><span class="default">, </span><span class="string">'Git'</span><span class="default">, </span><span class="string">'Responsive Design'</span><span class="default">],<br></span>
+                         <span class="default">&nbsp;&nbsp;passion: </span><span class="string">'Building intuitive and beautiful user interfaces.'</span><span class="default">,<br></span>
+                         <span class="default">&nbsp;&nbsp;approach: </span><span class="string">'Clean code, user-centric design, continuous learning.'</span><span class="default">,<br></span>
+                         <span class="default">&nbsp;&nbsp;contact: </span><span class="default">() => {<br></span>
+                         <span class="default">&nbsp;&nbsp;&nbsp;&nbsp;console.log(</span><span class="string">'Let\'s connect and build something awesome!'</span><span class="default">);<br></span>
+                         <span class="default">&nbsp;&nbsp;}</span>
+                         <span class="default"><br>};<br><br></span>
+                         <span class="comment">// Scroll down to see my work and experience!</span>
+                     </div>
+                     <p>
+                        Beyond the code, I'm passionate about turning complex problems into simple, elegant solutions. I thrive in environments where I can learn and contribute to projects that make a real impact.
+                     </p>
                 </div>
                 <div class="aboutSkills">
-                     <h3>Skills</h3>
+                     <h3>Tech Stack</h3>
                      <ul class="skillList">
                          <li class="skillItem">HTML5</li>
                          <li class="skillItem">CSS3</li>
-                         <li class="skillItem">JavaScript (ES6+)</li>
+                         <li class="skillItem">JavaScript</li>
+                         <li class="skillItem">TypeScript</li>
                          <li class="skillItem">React</li>
                          <li class="skillItem">Vue.js</li>
+                         <li class="skillItem">Node.js (Basic)</li>
+                         <li class="skillItem">Git/GitHub</li>
                          <li class="skillItem">Responsive Design</li>
-                         <li class="skillItem">Git</li>
-                         <li class="skillItem">Web Performance</li>
+                         <li class="skillItem">Performance Opt.</li>
                      </ul>
                 </div>
             </div>
@@ -634,7 +775,7 @@
                     </div>
                     <div class="projectInfo">
                         <h3 class="projectTitle">Project Title One</h3>
-                        <p class="projectDescription">A brief description of Project One, highlighting its key features and technologies used.</p>
+                        <p class="projectDescription">A brief description of Project One, highlighting its key features and technologies used. Focused on [Key Feature 1] and [Key Feature 2].</p>
                         <div class="projectLinks">
                             <a href="#" target="_blank">Live Demo</a>
                             <a href="#" target="_blank">GitHub Repo</a>
@@ -647,7 +788,7 @@
                     </div>
                     <div class="projectInfo">
                         <h3 class="projectTitle">Project Title Two</h3>
-                        <p class="projectDescription">A brief description of Project Two, highlighting its key features and technologies used.</p>
+                        <p class="projectDescription">A brief description of Project Two, highlighting its key features and technologies used. Built with [Tech 1] and [Tech 2].</p>
                         <div class="projectLinks">
                             <a href="#" target="_blank">Live Demo</a>
                             <a href="#" target="_blank">GitHub Repo</a>
@@ -660,7 +801,7 @@
                     </div>
                     <div class="projectInfo">
                         <h3 class="projectTitle">Project Title Three</h3>
-                        <p class="projectDescription">A brief description of Project Three, highlighting its key features and technologies used.</p>
+                        <p class="projectDescription">A brief description of Project Three, highlighting its key features and technologies used. Showcases [Concept 1] and [Concept 2].</p>
                         <div class="projectLinks">
                             <a href="#" target="_blank">Live Demo</a>
                             <a href="#" target="_blank">GitHub Repo</a>
@@ -678,9 +819,10 @@
                      <p class="experienceSubtitle">Awesome Tech Company</p>
                      <p class="experienceDate">Jan 20XX - Present</p>
                      <ul>
-                         <li>Developed and maintained responsive web applications using HTML, CSS, and JavaScript.</li>
-                         <li>Collaborated with design and backend teams to deliver high-quality user interfaces.</li>
-                         <li>Implemented new features and optimized existing codebase for performance.</li>
+                         <li>Developed and maintained responsive web applications using modern frontend frameworks (e.g., React, Vue.js).</li>
+                         <li>Collaborated closely with UX/UI designers and backend engineers in an Agile environment.</li>
+                         <li>Improved web performance metrics through code splitting, lazy loading, and asset optimization.</li>
+                         <li>Mentored junior developers and participated in code reviews.</li>
                      </ul>
                  </div>
                   <div class="experienceItem animateOnScroll">
@@ -688,9 +830,10 @@
                      <p class="experienceSubtitle">Creative Agency Name</p>
                      <p class="experienceDate">Jun 20XX - Dec 20XX</p>
                       <ul>
-                         <li>Assisted in building landing pages and marketing websites.</li>
-                         <li>Learned and applied best practices in frontend development.</li>
-                         <li>Gained experience with version control (Git).</li>
+                         <li>Built pixel-perfect landing pages and client websites from design mockups.</li>
+                         <li>Implemented interactive features using vanilla JavaScript.</li>
+                         <li>Contributed to code base using Git for version control and collaboration.</li>
+                         <li>Assisted in debugging and troubleshooting frontend issues.</li>
                      </ul>
                  </div>
                  </div>
@@ -699,7 +842,7 @@
         <section id="contact" class="contentSection contactSection animateOnScroll">
             <h2 class="sectionTitle">Contact</h2>
             <div class="contactInfo">
-                <p>Feel free to get in touch!</p>
+                <p>Ready to build something great? Let's connect!</p>
                 <p>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
                 <p>LinkedIn: <a href="https://linkedin.com/in/yourprofile" target="_blank">linkedin.com/in/yourprofile</a></p>
                 <p>GitHub: <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a></p>
@@ -720,6 +863,11 @@
             const navLinks = document.querySelectorAll('.navLink');
             const sections = document.querySelectorAll('.contentSection');
             const elementsToAnimate = document.querySelectorAll('.animateOnScroll');
+            const backgroundLayers = document.querySelectorAll('.backgroundLayer');
+            const aboutCodeBlock = document.querySelector('.aboutCodeBlock');
+            let aboutCodeObserver; // To store observer reference
+            let typingInterval; // To store typing animation interval
+            let currentCharacterIndex = 0;
 
             // --- Theme Toggle ---
             const storedTheme = localStorage.getItem('theme');
@@ -744,7 +892,6 @@
             // --- Mobile Menu Toggle ---
             menuToggle.addEventListener('click', () => {
                 navList.classList.toggle('navOpen');
-                // Optional: Toggle ARIA expanded state
                 const isExpanded = navList.classList.contains('navOpen');
                 menuToggle.setAttribute('aria-expanded', isExpanded);
             });
@@ -754,7 +901,7 @@
                 link.addEventListener('click', () => {
                     if (navList.classList.contains('navOpen')) {
                         navList.classList.remove('navOpen');
-                         menuToggle.setAttribute('aria-expanded', false); // Update ARIA
+                         menuToggle.setAttribute('aria-expanded', false);
                     }
                 });
             });
@@ -768,7 +915,6 @@
                     const targetSection = document.getElementById(targetId);
 
                     if (targetSection) {
-                        // Scroll to section, offset by header height
                         const headerHeight = document.querySelector('.siteHeader').offsetHeight;
                         const elementPosition = targetSection.getBoundingClientRect().top;
                         const offsetPosition = elementPosition + window.scrollY - headerHeight;
@@ -781,19 +927,34 @@
                 });
             });
 
+            // --- Parallax Background Effect (JS based) ---
+            const moveBackground = () => {
+                const scrolled = window.scrollY;
+                backgroundLayers.forEach(layer => {
+                    const speed = parseFloat(layer.dataset.speed);
+                    // Move layers vertically based on scroll speed
+                    // transform: translateY() is generally better for performance
+                    layer.style.transform = `translateY(${scrolled * speed}px)`;
+                });
+            };
+
+            window.addEventListener('scroll', moveBackground);
+            // Initial call to position layers correctly on load
+            moveBackground();
+
 
             // --- Scroll-Triggered Animations (Intersection Observer) ---
             const observerOptions = {
-                root: null, // Use the viewport as the root
+                root: null, // Use the viewport
                 rootMargin: '0px',
-                threshold: 0.1 // Trigger when 10% of the element is visible
+                threshold: 0.1 // Trigger when 10% visible
             };
 
             const observer = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('isAnimated');
-                        // Optionally, stop observing once animated if it should only happen once
+                        // Optional: Stop observing if only needed once
                         // observer.unobserve(entry.target);
                     } else {
                          // Optional: Remove class when out of view to re-animate on scroll back
@@ -802,24 +963,70 @@
                 });
             }, observerOptions);
 
-            // Observe each element intended for animation
+            // Observe generic elements for fade/slide animation
             elementsToAnimate.forEach(el => {
-                 // Add a small delay based on position or index for staggered effect (optional)
-                 // const delay = parseFloat(el.dataset.delay) || 0;
-                 // setTimeout(() => observer.observe(el), delay * 1000);
                  observer.observe(el);
             });
+
+
+            // --- About Section Typing Animation ---
+            const typeCode = () => {
+                 const spans = aboutCodeBlock.querySelectorAll('span');
+                 const totalCharacters = spans.length;
+
+                 if (currentCharacterIndex < totalCharacters) {
+                     spans[currentCharacterIndex].classList.add('visible');
+                     currentCharacterIndex++;
+                 } else {
+                     clearInterval(typingInterval);
+                     aboutCodeBlock.classList.add('typingComplete'); // Add class to hide cursor
+                 }
+            };
+
+            const resetTyping = () => {
+                 clearInterval(typingInterval);
+                 currentCharacterIndex = 0;
+                 aboutCodeBlock.classList.remove('typingComplete');
+                 aboutCodeBlock.querySelectorAll('span').forEach(span => span.classList.remove('visible'));
+            };
+
+
+            // Observer specifically for the About section to trigger typing
+            aboutCodeObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (currentCharacterIndex === 0) { // Only start if not already typing/typed
+                            // Add small delay before typing starts after section is visible
+                            setTimeout(() => {
+                                typingInterval = setInterval(typeCode, 20); // Typing speed (ms per character)
+                            }, 500); // Delay before starting (ms)
+                        }
+                         // Optional: Unobserve if you only want it to type once
+                         // observer.unobserve(entry.target);
+                    } else {
+                        // Optional: Reset typing animation when section leaves view
+                        // resetTyping();
+                    }
+                });
+            }, { threshold: 0.2 }); // Adjust threshold for when typing starts
+
+            // Observe the About section
+            if (aboutCodeBlock) {
+                 aboutCodeObserver.observe(aboutCodeBlock.closest('.contentSection')); // Observe the parent section
+            }
 
 
              // --- Highlight Active Nav Link on Scroll ---
              const highlightNavLink = () => {
                  let activeSectionId = '';
-                 // Add header height offset + a few pixels for buffer
-                 const scrollPosition = window.scrollY + document.querySelector('.siteHeader').offsetHeight + 50;
+                 const scrollPosition = window.scrollY + document.querySelector('.siteHeader').offsetHeight + 50; // Add header height offset + buffer
 
                  sections.forEach(section => {
                      const sectionTop = section.offsetTop;
                      const sectionHeight = section.offsetHeight;
+                     // Account for padding added by contentSection
+                     const sectionHeightWithoutPadding = sectionHeight - (8 * 16 * 2); // 8rem top/bottom padding (approx in px)
+
                      if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
                          activeSectionId = section.getAttribute('id');
                      }
