@@ -543,6 +543,7 @@
                  margin-left: 0.8rem;
             }
              .menuToggle {
+                 display: block; /* Make sure it's visible on mobile */
                  font-size: 1.8rem;
              }
 
@@ -703,8 +704,7 @@
 <body>
 
     <div class="backgroundContainer">
-        <div class="backgroundLayer layerOne" data-speed="0.1"></div> <div class="backgroundLayer layerTwo" data-speed="0.05"></div>
-         </div>
+        <div class="backgroundLayer layerOne" data-speed="0.2"></div> <div class="backgroundLayer layerTwo" data-speed="0.1"></div> </div>
 
     <header class="siteHeader">
         <div class="siteLogo">Farhad</div>
@@ -998,14 +998,14 @@
                         if (currentCharacterIndex === 0) { // Only start if not already typing/typed
                             // Add small delay before typing starts after section is visible
                             setTimeout(() => {
-                                typingInterval = setInterval(typeCode, 20); // Typing speed (ms per character)
+                                typingInterval = setInterval(typeCode, 30); // Typing speed (ms per character) - Adjusted slightly slower
                             }, 500); // Delay before starting (ms)
                         }
                          // Optional: Unobserve if you only want it to type once
                          // observer.unobserve(entry.target);
                     } else {
                         // Optional: Reset typing animation when section leaves view
-                        // resetTyping();
+                        // resetTyping(); // Uncomment if you want it to re-type every time
                     }
                 });
             }, { threshold: 0.2 }); // Adjust threshold for when typing starts
@@ -1019,15 +1019,19 @@
              // --- Highlight Active Nav Link on Scroll ---
              const highlightNavLink = () => {
                  let activeSectionId = '';
-                 const scrollPosition = window.scrollY + document.querySelector('.siteHeader').offsetHeight + 50; // Add header height offset + buffer
+                 const headerHeight = document.querySelector('.siteHeader').offsetHeight;
+                 // Add header height offset + a few pixels for buffer
+                 const scrollPosition = window.scrollY + headerHeight + 50;
 
                  sections.forEach(section => {
                      const sectionTop = section.offsetTop;
                      const sectionHeight = section.offsetHeight;
                      // Account for padding added by contentSection
-                     const sectionHeightWithoutPadding = sectionHeight - (8 * 16 * 2); // 8rem top/bottom padding (approx in px)
+                     const sectionPaddingTop = parseFloat(getComputedStyle(section).paddingTop);
+                     const sectionPaddingBottom = parseFloat(getComputedStyle(section).paddingBottom);
+                      const sectionHeightWithoutPadding = section.scrollHeight; // Use scrollHeight for actual content height
 
-                     if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                     if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeightWithoutPadding) {
                          activeSectionId = section.getAttribute('id');
                      }
                  });
