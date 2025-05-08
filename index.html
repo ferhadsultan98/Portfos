@@ -14,6 +14,8 @@
             --cardBackground: #ffffff; /* White Card Background */
             --headerBackground: rgba(255, 255, 255, 0.9); /* Semi-transparent White Header */
             --dividerColor: #ddd; /* Light Divider */
+            --sunColor: rgba(255, 255, 0, 0.1); /* Subtle Yellow for Light Mode Sun */
+            --planetColor: rgba(150, 150, 150, 0.2); /* Grey for Planets */
 
             /* Code syntax colors (can be customized, keep them subtle/monochrome-friendly) */
             --codeKeywordColor: #007bff; /* Blue-ish */
@@ -31,6 +33,9 @@
             --cardBackground: #333333; /* Dark Grey Card Background */
             --headerBackground: rgba(26, 26, 26, 0.9); /* Semi-transparent Dark Header */
             --dividerColor: #444; /* Dark Divider */
+             --sunColor: rgba(255, 255, 0, 0); /* Transparent in Dark Mode */
+             --planetColor: rgba(200, 200, 200, 0.15); /* Lighter Grey for Planets in Dark Mode */
+
 
              /* Code syntax colors for dark mode */
             --codeKeywordColor: #61afef; /* Softer Blue */
@@ -67,42 +72,80 @@
              color: var(--secondaryAccentColor);
          }
 
-        /* --- Parallax Background Animation --- */
+        /* --- Space Background with Planets/Moons --- */
         .backgroundContainer {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -2; /* Further back */
+            z-index: -2;
             overflow: hidden;
-            background: var(--backgroundColor); /* Background color follows theme */
+            background: var(--backgroundColor);
             transition: background-color 0.6s ease;
         }
 
-        .backgroundLayer {
+        .animatedPlanet {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            /* These will be moved by JS based on scroll */
-             transform: translateZ(0); /* Optimize for transform animations */
-             will-change: transform;
+            background-color: var(--planetColor);
+            border-radius: 50%;
+            opacity: 0.8; /* Start visible */
+            pointer-events: none;
+            transition: background-color 0.6s ease, opacity 0.6s ease;
         }
 
-         /* Example Layers - Adjust opacity, type of shapes/patterns, and JS scroll speed */
-        .layerOne {
-             background-image: radial-gradient(circle, var(--secondaryAccentColor) 1px, transparent 1px);
-             background-size: 20px 20px;
-             opacity: 0.1;
-             z-index: -1;
+        /* Define planet sizes and initial positions */
+        /* Increased animation durations for smoother, slower movement */
+        .planetOne { width: 100px; height: 100px; top: 120%; left: 10%; animation: planetOrbitOne 120s linear infinite; }
+        .planetTwo { width: 80px; height: 80px; top: -20%; left: 80%; animation: planetOrbitTwo 130s linear infinite; }
+        .planetThree { width: 150px; height: 150px; top: 150%; left: 60%; animation: planetOrbitThree 150s linear infinite; }
+        .planetFour { width: 60px; height: 60px; top: -10%; left: 30%; animation: planetOrbitFour 110s linear infinite; }
+        /* Add more planets with unique classes, sizes, positions, and animation names */
+
+
+        /* Keyframes for planet orbits (adjust paths as needed) */
+        @keyframes planetOrbitOne {
+            0% { transform: translate(0, 0); opacity: 0.8; }
+            50% { transform: translate(calc(100vw - 200px), calc(-150vh + 200px)); opacity: 0.5; } /* Move up-right */
+            100% { transform: translate(0, 0); opacity: 0.8; } /* Reset for loop */
         }
-        .layerTwo {
-             background-image: linear-gradient(to right, var(--secondaryAccentColor) 1px, transparent 1px), linear-gradient(to bottom, var(--secondaryAccentColor) 1px, transparent 1px);
-             background-size: 50px 50px;
-             opacity: 0.05;
-             z-index: -1;
+         @keyframes planetOrbitTwo {
+            0% { transform: translate(0, 0); opacity: 0.8; }
+            50% { transform: translate(calc(-100vw + 160px), calc(150vh - 160px)); opacity: 0.6; } /* Move down-left */
+            100% { transform: translate(0, 0); opacity: 0.8; }
         }
-         /* Add more layers with different patterns/opacities/sizes */
+         @keyframes planetOrbitThree {
+             0% { transform: translate(0, 0); opacity: 0.8; }
+             40% { transform: translate(calc(-50vw + 300px), calc(-100vh + 300px)); opacity: 0.4; } /* Example diagonal path */
+             80% { transform: translate(calc(50vw - 300px), calc(100vh - 300px)); opacity: 0.4; }
+             100% { transform: translate(0, 0); opacity: 0.8; }
+         }
+         @keyframes planetOrbitFour {
+              0% { transform: translate(0, 0); opacity: 0.8; }
+              30% { transform: translate(0, 50vh); opacity: 0.7; }
+              70% { transform: translate(calc(100vw - 120px), 100vh); opacity: 0.5;}
+              100% { transform: translate(0, 0); opacity: 0.8; }
+         }
+
+
+        /* Light Mode Sun Effect */
+        body.darkMode .sunGradient {
+            opacity: 0; /* Hidden in dark mode */
+        }
+
+        .sunGradient {
+            position: absolute;
+            top: 0; /* Position the sun */
+            left: 0;
+            width: 500px; /* Size of the gradient effect */
+            height: 500px;
+            background: radial-gradient(circle, var(--sunColor) 0%, transparent 60%);
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            opacity: 1; /* Visible in light mode */
+             transform: translate(-250px, -250px); /* Center the gradient source */
+            z-index: -1;
+        }
 
 
         /* --- Header and Navigation --- */
@@ -146,7 +189,7 @@
             font-weight: bold;
             transition: color 0.3s ease;
             position: relative;
-            padding-bottom: 5px; /* Space for underline */
+            padding-bottom: 5px;
         }
 
         .navLink::after {
@@ -203,22 +246,30 @@
             padding: 2rem;
             max-width: 1200px;
             margin: 0 auto;
-            position: relative; /* Needed for z-index above background */
+            position: relative;
             z-index: 1;
         }
 
         .contentSection {
-            padding: 8rem 0; /* More padding */
+            padding: 8rem 0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative; /* Needed for layering within section if needed */
+            position: relative;
+            /* Maybe add subtle background patterns per section */
+             /* background: radial-gradient(ellipse at bottom, var(--secondaryAccentColor) 0%, transparent 80%); */
+             /* background-size: 800px 800px; */
+             /* background-repeat: no-repeat; */
+             /* background-position: center center; */
+             /* opacity: 0.05; */ /* Very subtle */
         }
+         /* Example of unique background per section (if needed) */
+         /* #about { background-image: ...; } */
 
         .sectionTitle {
             text-align: center;
-            font-size: 3rem; /* Larger title */
+            font-size: 3rem;
             margin-bottom: 3rem;
             color: var(--primaryAccentColor);
             position: relative;
@@ -231,120 +282,130 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px; /* Wider underline */
-            height: 4px; /* Thicker underline */
+            width: 100px;
+            height: 4px;
             background-color: var(--secondaryAccentColor);
             border-radius: 3px;
         }
 
 
-        /* --- Home Section (Hero) --- */
+        /* --- Home Section (Hero) - Redesigned --- */
         .heroSection {
-            text-align: center;
-            padding-top: 10rem; /* Extra padding to clear sticky header */
+            text-align: left; /* Align left */
+            padding-top: 10rem;
             min-height: calc(100vh - 80px);
+            display: flex; /* Use flex for layout */
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
         }
 
+         .heroContent {
+             flex: 1;
+             min-width: 300px;
+         }
         .heroSection h1 {
-            font-size: 4rem; /* Larger hero title */
+            font-size: 4.5rem; /* Even larger title */
             margin-bottom: 1rem;
             color: var(--primaryAccentColor);
+            line-height: 1.1;
         }
 
          .heroSection p {
-            font-size: 1.6rem; /* Larger hero subtitle */
-            margin-bottom: 2rem;
+            font-size: 1.8rem; /* Larger subtitle */
+            margin-bottom: 2.5rem;
             color: var(--textColor);
+            opacity: 0.9;
          }
 
-        .ctaButton {
-            display: inline-block;
-            background-color: var(--primaryAccentColor);
-            color: var(--backgroundColor); /* Text color is opposite of accent */
-            padding: 1rem 2.5rem; /* Larger button */
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.3rem;
-            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
+         .heroImagePlaceholder {
+             flex: 1;
+             min-width: 250px;
+             max-width: 400px;
+             height: 300px;
+             background-color: var(--cardBackground); /* Placeholder visual */
+             border: 2px solid var(--secondaryAccentColor);
+             border-radius: 8px;
+             /* Add an abstract graphic or pattern here if desired */
+              background-image: linear-gradient(45deg, var(--secondaryAccentColor) 25%, transparent 25%, transparent 75%, var(--secondaryAccentColor) 75%, var(--secondaryAccentColor)), linear-gradient(-45deg, var(--secondaryAccentColor) 25%, transparent 25%, transparent 75%, var(--secondaryAccentColor) 75%, var(--secondaryAccentColor));
+              background-size: 30px 30px;
+              opacity: 0.5;
+             transition: background-color 0.6s ease, border-color 0.6s ease;
+         }
 
-        .ctaButton:hover {
-            background-color: var(--secondaryAccentColor);
-            color: var(--backgroundColor);
-            transform: translateY(-5px); /* More pronounced hover effect */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
 
-        /* --- About Section (Typing Animation) --- */
+        /* --- About Section - Redesigned --- */
          .aboutContent {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4rem; /* Larger gap */
-            align-items: flex-start;
-            justify-content: space-between; /* Space out text and skills */
+            display: grid; /* Use grid for layout */
+            grid-template-columns: 1.5fr 1fr; /* Code block wider than skills */
+            gap: 4rem;
+            align-items: start; /* Align items to start of grid cell */
          }
          .aboutText {
-            flex: 2;
-            min-width: 300px;
             font-size: 1.1rem;
          }
+          .aboutText p {
+              margin-bottom: 1.5rem;
+          }
+
          .aboutSkills {
-            flex: 1;
-            min-width: 250px; /* Wider skills section */
-            border-left: 1px solid var(--dividerColor); /* Visual separation */
-            padding-left: 4rem; /* Larger padding */
+             border-left: 1px solid var(--dividerColor);
+             padding-left: 4rem;
          }
          .aboutSkills h3 {
-            margin-bottom: 1.5rem; /* More space */
+            margin-bottom: 1.5rem;
             color: var(--primaryAccentColor);
             font-size: 1.8rem;
          }
          .skillList {
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem; /* Larger gap */
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 1rem;
          }
          .skillItem {
             background-color: var(--cardBackground);
-            padding: 1rem; /* Larger padding */
+            padding: 0.8rem; /* Slightly smaller padding */
             border-radius: 5px;
             text-align: center;
             border: 1px solid var(--secondaryAccentColor);
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease, border-color 0.6s ease;
              font-weight: bold;
+             font-size: 0.9rem;
          }
          .skillItem:hover {
-            transform: translateY(-8px); /* More pronounced hover effect */
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
          }
 
         /* Typing Animation Specific Styles */
          .aboutCodeBlock {
-             font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace; /* Monospace font for code */
-             white-space: pre-wrap; /* Respect newlines and wrap text */
+             font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+             white-space: pre-wrap;
              word-break: break-word;
              background-color: var(--cardBackground);
              padding: 2rem;
              border-radius: 8px;
              border: 1px solid var(--secondaryAccentColor);
              line-height: 1.8;
-             margin-bottom: 2rem;
-             overflow: hidden; /* Hide text initially */
-             position: relative; /* For cursor */
+             margin-bottom: 2rem; /* Space below code block if text follows */
+             overflow: hidden;
+             position: relative;
              transition: background-color 0.6s ease, border-color 0.6s ease;
+             font-size: 1rem;
          }
+          .aboutText > p { /* Style paragraph below code block */
+             margin-top: 2rem;
+          }
+
 
          .aboutCodeBlock span {
-            opacity: 0; /* Hide text initially */
-            transition: opacity 0s; /* No transition during typing */
+            opacity: 0;
+            transition: opacity 0s;
          }
           .aboutCodeBlock span.visible {
-             opacity: 1; /* Show text */
-             transition: opacity 0.05s linear; /* Quick reveal */
+             opacity: 1;
+             transition: opacity 0.03s linear; /* Faster reveal */
           }
 
          /* Syntax Highlighting Classes (for JS to add) */
@@ -356,36 +417,34 @@
 
          /* Blinking cursor */
          .aboutCodeBlock::after {
-             content: '_'; /* Cursor character */
+             content: '_';
              display: inline;
              color: var(--codeCursorColor);
              animation: blink 0.7s infinite steps(1);
              font-weight: normal;
          }
           .aboutCodeBlock.typingComplete::after {
-              content: ''; /* Remove cursor after typing */
+              content: '';
               animation: none;
           }
-
-
          @keyframes blink {
              0%, 100% { opacity: 1; }
              50% { opacity: 0; }
          }
 
 
-        /* --- Projects Section --- */
+        /* --- Projects Section - Redesigned --- */
         .projectGrid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly wider cards */
-            gap: 3rem; /* Larger gap */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjusted min width */
+            gap: 2.5rem; /* Adjusted gap */
         }
 
         .projectCard {
             background-color: var(--cardBackground);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* More pronounced shadow */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18); /* More pronounced shadow */
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease;
             border: 1px solid var(--secondaryAccentColor);
             display: flex;
@@ -393,8 +452,8 @@
         }
 
         .projectCard:hover {
-            transform: translateY(-12px); /* More pronounced hover */
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+            transform: translateY(-15px); /* More pronounced hover */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
         }
 
         .projectImageContainer {
@@ -403,7 +462,7 @@
         }
         .projectImage {
             width: 100%;
-            height: 220px; /* Slightly taller image height */
+            height: 200px; /* Adjusted height */
             object-fit: cover;
             transition: transform 0.5s ease;
         }
@@ -412,26 +471,27 @@
         }
 
         .projectInfo {
-            padding: 2rem; /* Larger padding */
+            padding: 1.5rem; /* Adjusted padding */
             flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
 
         .projectTitle {
-            font-size: 1.6rem; /* Larger title */
-            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            margin-bottom: 0.8rem;
             color: var(--primaryAccentColor);
         }
 
         .projectDescription {
-            margin-bottom: 1.5rem; /* More space */
+            margin-bottom: 1rem;
             flex-grow: 1;
+            font-size: 0.95rem;
         }
 
         .projectLinks a {
             display: inline-block;
-            margin-right: 1.5rem; /* Larger margin */
+            margin-right: 1rem;
             color: var(--secondaryAccentColor);
             text-decoration: none;
             font-weight: bold;
@@ -444,55 +504,101 @@
         }
 
 
-        /* --- Experiences Section --- */
+        /* --- Experiences Section - Redesigned (Timeline Style) --- */
+         .experienceList {
+             position: relative;
+             padding-left: 20px; /* Space for timeline line */
+         }
+         .experienceList::before { /* Vertical timeline line */
+             content: '';
+             position: absolute;
+             left: 0;
+             top: 0;
+             bottom: 0;
+             width: 2px;
+             background-color: var(--secondaryAccentColor);
+         }
+
          .experienceItem {
             background-color: var(--cardBackground);
             border-radius: 8px;
-            padding: 2rem; /* Larger padding */
-            margin-bottom: 2.5rem; /* More space */
+            padding: 1.5rem;
+            margin-bottom: 3rem; /* More space between items */
             border: 1px solid var(--secondaryAccentColor);
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease, border-color 0.6s ease;
-            position: relative; /* For potential timeline effects */
+            position: relative;
+            margin-left: 20px; /* Push item right to align with line */
          }
+
+          .experienceItem::before { /* Timeline dot */
+             content: '';
+             position: absolute;
+             left: -28px; /* Position dot on the line */
+             top: 1.8rem; /* Align with top of item padding */
+             width: 16px;
+             height: 16px;
+             background-color: var(--primaryAccentColor);
+             border-radius: 50%;
+             border: 3px solid var(--backgroundColor); /* Border matches background */
+             z-index: 1; /* Above the line */
+             transition: background-color 0.6s ease, border-color 0.6s ease;
+          }
+
+
          .experienceItem:hover {
-            transform: translateX(15px); /* More pronounced slide */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(0); /* Disable left/right slide */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* More subtle shadow on hover */
          }
+          .experienceItem:hover::before {
+              background-color: var(--secondaryAccentColor); /* Change dot color on hover */
+          }
+
          .experienceTitle {
-            font-size: 1.5rem; /* Larger title */
+            font-size: 1.4rem;
             color: var(--primaryAccentColor);
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
          }
          .experienceSubtitle {
-             font-size: 1.1rem; /* Slightly larger subtitle */
+             font-size: 1rem;
              color: var(--textColor);
              opacity: 0.9;
              margin-bottom: 0.5rem;
          }
          .experienceDate {
-            font-size: 1rem; /* Slightly larger date */
+            font-size: 0.9rem;
             color: var(--textColor);
             opacity: 0.8;
-            margin-bottom: 1.5rem; /* More space */
+            margin-bottom: 1rem;
          }
           .experienceItem ul {
               list-style: disc;
-              margin-left: 1.8rem; /* More indent */
+              margin-left: 1.5rem;
               color: var(--textColor);
               opacity: 0.9;
           }
            .experienceItem ul li {
-               margin-bottom: 0.8rem; /* More space between list items */
+               margin-bottom: 0.5rem;
            }
 
 
-        /* --- Contact Section --- */
+        /* --- Contact Section - Redesigned --- */
         .contactInfo {
             text-align: center;
+            max-width: 600px; /* Limit width */
+            margin: 0 auto; /* Center the block */
+            background-color: var(--cardBackground);
+            padding: 3rem; /* More padding */
+            border-radius: 8px;
+            border: 1px solid var(--secondaryAccentColor);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.6s ease, border-color 0.6s ease, box-shadow 0.3s ease;
         }
+         .contactInfo:hover {
+             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+         }
         .contactInfo p {
-            font-size: 1.3rem; /* Larger text */
-            margin-bottom: 1.5rem; /* More space */
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
         }
          .contactInfo a {
              color: var(--primaryAccentColor);
@@ -509,8 +615,8 @@
         /* --- Footer --- */
         .siteFooter {
             text-align: center;
-            padding: 3rem; /* More padding */
-            margin-top: 4rem; /* More space */
+            padding: 3rem;
+            margin-top: 4rem;
             border-top: 1px solid var(--dividerColor);
             color: var(--textColor);
             opacity: 0.7;
@@ -520,20 +626,24 @@
         /* --- Scroll Animation Classes --- */
         .animateOnScroll {
             opacity: 0;
-            transform: translateY(50px); /* Start further below */
+            transform: translateY(50px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-             will-change: opacity, transform; /* Performance hint */
+             will-change: opacity, transform;
         }
 
         .animateOnScroll.isAnimated {
             opacity: 1;
             transform: translateY(0);
         }
+         /* Optional: Add variations */
+         /* .animateSlideLeft { opacity: 0; transform: translateX(-50px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; } */
+         /* .animateSlideLeft.isAnimated { opacity: 1; transform: translateX(0); } */
+
 
         /* --- Mobile Navigation Animation --- */
         @media (max-width: 768px) {
             .siteHeader {
-                padding: 0.8rem 1rem; /* Adjust padding */
+                padding: 0.8rem 1rem;
             }
             .siteLogo {
                 font-size: 1.5rem;
@@ -565,14 +675,14 @@
             }
 
              .navList.navOpen {
-                 max-height: 600px; /* Increased height */
-                 padding: 0.5rem 0; /* Adjust padding */
+                 max-height: 600px;
+                 padding: 0.5rem 0;
              }
 
             .navItem {
                 margin: 0;
                 text-align: center;
-                padding: 0.6rem 0; /* Adjust padding */
+                padding: 0.6rem 0;
                  border-bottom: 1px solid var(--dividerColor);
             }
              .navItem:last-child {
@@ -580,68 +690,77 @@
              }
 
             .navLink {
-                 padding: 0.3rem 0; /* Adjust link padding */
+                 padding: 0.3rem 0;
                  font-size: 1rem;
             }
 
 
             .mainContent {
-                padding: 0.8rem; /* Reduce padding */
+                padding: 0.8rem;
             }
 
              .contentSection {
-                 padding: 5rem 0; /* Adjust vertical padding */
+                 padding: 5rem 0;
                  min-height: auto;
              }
 
             .heroSection {
-                 padding-top: 5rem; /* Adjust padding */
+                 flex-direction: column; /* Stack items */
+                 text-align: center; /* Center text */
+                 padding-top: 5rem;
                  min-height: auto;
-            }
-
-            .heroSection h1 {
-                font-size: 3rem; /* Adjust font size */
-            }
-             .heroSection p {
-                 font-size: 1.3rem; /* Adjust font size */
+             }
+              .heroContent {
+                  min-width: auto;
+                  width: 100%;
+              }
+              .heroSection h1 {
+                  font-size: 3.5rem; /* Adjust font size */
+              }
+               .heroSection p {
+                  font-size: 1.4rem; /* Adjust font size */
+               }
+             .heroImagePlaceholder {
+                 width: 80%; /* Adjust size */
+                 height: 200px; /* Adjust height */
+                 margin: 2rem auto 0; /* Center below text */
              }
 
+
             .sectionTitle {
-                font-size: 2.3rem; /* Adjust font size */
+                font-size: 2.3rem;
                 margin-bottom: 2rem;
             }
 
              .aboutContent {
-                flex-direction: column;
-                gap: 3rem; /* Adjust gap */
+                grid-template-columns: 1fr; /* Single column grid */
+                gap: 3rem;
              }
              .aboutText {
                  min-width: auto;
-                 width: 100%;
              }
              .aboutSkills {
                 min-width: auto;
-                width: 100%;
                 border-left: none;
                  border-top: 1px solid var(--dividerColor);
                  padding-left: 0;
-                 padding-top: 3rem; /* Adjust padding */
+                 padding-top: 3rem;
              }
              .aboutSkills h3 {
                  font-size: 1.6rem;
              }
              .skillList {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Adjust min width */
-                gap: 0.6rem; /* Adjust gap */
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 0.6rem;
              }
              .skillItem {
-                padding: 0.6rem; /* Adjust padding */
+                padding: 0.6rem;
                 font-size: 0.9rem;
              }
 
              .aboutCodeBlock {
-                 padding: 1.5rem; /* Adjust padding */
-                 font-size: 0.9rem; /* Smaller font size */
+                 padding: 1.5rem;
+                 font-size: 0.9rem;
              }
 
 
@@ -654,13 +773,13 @@
                  flex-direction: column;
              }
              .projectImage {
-                 height: 160px; /* Smaller image height */
+                 height: 160px;
              }
              .projectInfo {
-                 padding: 1.5rem; /* Adjust padding */
+                 padding: 1.5rem;
              }
              .projectTitle {
-                 font-size: 1.4rem; /* Adjust font size */
+                 font-size: 1.4rem;
              }
               .projectDescription {
                   font-size: 0.9rem;
@@ -670,23 +789,52 @@
                   margin-right: 1rem;
              }
 
+              .experienceList {
+                  padding-left: 0; /* Remove padding */
+              }
+               .experienceList::before {
+                  left: 50%; /* Center line */
+                  transform: translateX(-50%);
+               }
              .experienceItem {
-                 padding: 1.5rem; /* Adjust padding */
-                 margin-bottom: 2rem; /* Adjust margin */
+                 padding: 1.5rem;
+                 margin-bottom: 2rem;
+                 margin-left: 0; /* Remove left margin */
+                 text-align: center; /* Center text */
              }
-             .experienceTitle {
-                 font-size: 1.3rem; /* Adjust font size */
-             }
+              .experienceItem::before {
+                 left: 50%; /* Center dot */
+                 transform: translateX(-50%);
+                  top: -10px; /* Position above the card */
+              }
+              .experienceTitle {
+                 font-size: 1.3rem;
+              }
               .experienceSubtitle, .experienceDate {
-                   font-size: 0.9rem; /* Adjust font size */
+                   font-size: 0.9rem;
               }
               .experienceItem ul {
-                  margin-left: 1.5rem; /* Adjust indent */
+                  margin-left: 0;
+                  list-style-position: inside; /* List dots inside */
                   font-size: 0.9rem;
               }
+                .experienceItem ul li {
+                     text-align: left; /* Align list text left */
+                     margin-bottom: 0.3rem;
+                }
 
+
+              .contactInfo {
+                  padding: 2rem; /* Adjust padding */
+                  box-shadow: none; /* Remove shadow on mobile */
+                  border: none; /* Remove border on mobile */
+                  background-color: transparent; /* Transparent background */
+              }
+              .contactInfo:hover {
+                   box-shadow: none;
+              }
               .contactInfo p {
-                  font-size: 1.1rem; /* Adjust font size */
+                  font-size: 1.1rem;
                   margin-bottom: 1rem;
               }
               .contactInfo a {
@@ -694,7 +842,7 @@
               }
 
               .siteFooter {
-                  padding: 2rem; /* Adjust padding */
+                  padding: 2rem;
                   margin-top: 3rem;
                   font-size: 0.9rem;
               }
@@ -704,7 +852,16 @@
 <body>
 
     <div class="backgroundContainer">
-        <div class="backgroundLayer layerOne" data-speed="0.2"></div> <div class="backgroundLayer layerTwo" data-speed="0.1"></div> </div>
+        <div class="backgroundLayer" style="background-image: radial-gradient(circle, var(--secondaryAccentColor) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.1; z-index: -1;"></div>
+         <div class="backgroundLayer" style="background-image: linear-gradient(to right, var(--secondaryAccentColor) 1px, transparent 1px), linear-gradient(to bottom, var(--secondaryAccentColor) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.05; z-index: -1;"></div>
+
+        <div class="animatedPlanet planetOne"></div>
+        <div class="animatedPlanet planetTwo"></div>
+        <div class="animatedPlanet planetThree"></div>
+        <div class="animatedPlanet planetFour"></div>
+         <div class="sunGradient"></div>
+
+    </div>
 
     <header class="siteHeader">
         <div class="siteLogo">Farhad</div>
@@ -721,9 +878,13 @@
 
     <main class="mainContent">
         <section id="home" class="contentSection heroSection animateOnScroll">
-            <h1>Hello, I'm Farhad</h1>
-            <p>A Passionate Frontend Developer Crafting Seamless Web Experiences.</p>
-            <a href="#projects" class="ctaButton">View My Work</a>
+            <div class="heroContent">
+                 <h1>Hello, I'm Farhad</h1>
+                 <p>A Passionate Frontend Developer Crafting Seamless Web Experiences.</p>
+                 <a href="#projects" class="ctaButton">View My Work</a>
+            </div>
+             <div class="heroImagePlaceholder animateOnScroll">
+                 </div>
         </section>
 
         <section id="about" class="contentSection aboutSection animateOnScroll">
@@ -863,10 +1024,10 @@
             const navLinks = document.querySelectorAll('.navLink');
             const sections = document.querySelectorAll('.contentSection');
             const elementsToAnimate = document.querySelectorAll('.animateOnScroll');
-            const backgroundLayers = document.querySelectorAll('.backgroundLayer');
+            // Parallax is now CSS animation, removed JS layer movement
             const aboutCodeBlock = document.querySelector('.aboutCodeBlock');
-            let aboutCodeObserver; // To store observer reference
-            let typingInterval; // To store typing animation interval
+            let aboutCodeObserver;
+            let typingInterval;
             let currentCharacterIndex = 0;
 
             // --- Theme Toggle ---
@@ -927,21 +1088,6 @@
                 });
             });
 
-            // --- Parallax Background Effect (JS based) ---
-            const moveBackground = () => {
-                const scrolled = window.scrollY;
-                backgroundLayers.forEach(layer => {
-                    const speed = parseFloat(layer.dataset.speed);
-                    // Move layers vertically based on scroll speed
-                    // transform: translateY() is generally better for performance
-                    layer.style.transform = `translateY(${scrolled * speed}px)`;
-                });
-            };
-
-            window.addEventListener('scroll', moveBackground);
-            // Initial call to position layers correctly on load
-            moveBackground();
-
 
             // --- Scroll-Triggered Animations (Intersection Observer) ---
             const observerOptions = {
@@ -998,7 +1144,7 @@
                         if (currentCharacterIndex === 0) { // Only start if not already typing/typed
                             // Add small delay before typing starts after section is visible
                             setTimeout(() => {
-                                typingInterval = setInterval(typeCode, 30); // Typing speed (ms per character) - Adjusted slightly slower
+                                typingInterval = setInterval(typeCode, 30); // Typing speed (ms per character)
                             }, 500); // Delay before starting (ms)
                         }
                          // Optional: Unobserve if you only want it to type once
@@ -1026,12 +1172,10 @@
                  sections.forEach(section => {
                      const sectionTop = section.offsetTop;
                      const sectionHeight = section.offsetHeight;
-                     // Account for padding added by contentSection
-                     const sectionPaddingTop = parseFloat(getComputedStyle(section).paddingTop);
-                     const sectionPaddingBottom = parseFloat(getComputedStyle(section).paddingBottom);
-                      const sectionHeightWithoutPadding = section.scrollHeight; // Use scrollHeight for actual content height
+                     // Account for padding added by contentSection - A safer way is to check if scrollPosition is within the section boundaries
+                     const sectionBottom = sectionTop + sectionHeight;
 
-                     if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeightWithoutPadding) {
+                     if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
                          activeSectionId = section.getAttribute('id');
                      }
                  });
