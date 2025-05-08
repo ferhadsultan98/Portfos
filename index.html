@@ -5,45 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farhad - Frontend Developer Portfolio</title>
     <style>
-        /* --- CSS Variables for Black & White Themes with Subtle Accents --- */
+        /* --- CSS Variables for Tech/Geometric Themes --- */
         :root {
-            --backgroundColor: #f4f4f4; /* Light Grey Background */
-            --textColor: #1a1a1a; /* Dark Text */
-            --primaryAccentColor: #333; /* Dark Grey for Titles/Highlights */
-            --secondaryAccentColor: #666; /* Medium Grey for Borders/Details */
-            --cardBackground: #ffffff; /* White Card Background */
-            --headerBackground: rgba(255, 255, 255, 0.9); /* Semi-transparent White Header */
-            --dividerColor: #ddd; /* Light Divider */
+            --backgroundColor: #0a0a0a; /* Very Dark Background */
+            --textColor: #e0e0e0; /* Light Grey Text */
+            --primaryAccentColor: #00ffff; /* Cyan/Aqua Tech Glow/Highlight */
+            --secondaryAccentColor: #666666; /* Medium Grey for Borders/Details */
+            --cardBackground: #1a1a1a; /* Dark Card Background */
+            --headerBackground: rgba(10, 10, 10, 0.9); /* Semi-transparent Dark Header */
+            --dividerColor: #333; /* Darker Divider */
             --sunColor: rgba(255, 255, 0, 0.1); /* Subtle Yellow for Light Mode Sun */
-            --planetColor: rgba(150, 150, 150, 0.2); /* Grey for Planets */
+            --planetBaseColor: #555; /* Base Grey for Planets */
+            --planetShadowColor1: rgba(30, 30, 30, 0.5); /* Shadow for depth */
+             --planetShadowColor2: rgba(80, 80, 80, 0.3); /* Lighter shadow */
+             --planetGlowColor: rgba(0, 255, 255, 0.05); /* Subtle glow */
 
-            /* Code syntax colors (can be customized, keep them subtle/monochrome-friendly) */
-            --codeKeywordColor: #007bff; /* Blue-ish */
-            --codeStringColor: #28a745; /* Green-ish */
-            --codeCommentColor: #6c757d; /* Grey */
-            --codeDefaultColor: #333; /* Default code text */
-            --codeCursorColor: #333; /* Cursor color */
+
+            /* Code syntax colors (adjust for dark/light contrast) */
+            --codeKeywordColor: #e06c75; /* Reddish */
+            --codeStringColor: #98c379; /* Greenish */
+            --codeCommentColor: #5c6370; /* Grey */
+            --codeDefaultColor: #e0e0e0; /* Light text */
+            --codeCursorColor: #e0e0e0; /* Cursor color */
         }
 
         body.darkMode {
-            --backgroundColor: #1a1a1a; /* Dark Background */
-            --textColor: #f4f4f4; /* Light Text */
-            --primaryAccentColor: #ccc; /* Light Grey for Titles/Highlights */
-            --secondaryAccentColor: #666; /* Medium Grey for Borders/Details */
-            --cardBackground: #333333; /* Dark Grey Card Background */
-            --headerBackground: rgba(26, 26, 26, 0.9); /* Semi-transparent Dark Header */
-            --dividerColor: #444; /* Dark Divider */
-             --sunColor: rgba(255, 255, 0, 0); /* Transparent in Dark Mode */
-             --planetColor: rgba(200, 200, 200, 0.15); /* Lighter Grey for Planets in Dark Mode */
-
-
-             /* Code syntax colors for dark mode */
-            --codeKeywordColor: #61afef; /* Softer Blue */
-            --codeStringColor: #98c379; /* Softer Green */
-            --codeCommentColor: #5c6370; /* Softer Grey */
-            --codeDefaultColor: #f4f4f4; /* Default code text */
-            --codeCursorColor: #f4f4f4; /* Cursor color */
+             /* Dark mode is the default theme now */
+             /* No changes needed here if dark is base */
         }
+
+         body.lightMode { /* Define Light Mode explicitly */
+             --backgroundColor: #f4f4f4; /* Light Grey Background */
+             --textColor: #1a1a1a; /* Dark Text */
+             --primaryAccentColor: #007bff; /* Blue Accent */
+             --secondaryAccentColor: #cccccc; /* Light Grey for Borders/Details */
+             --cardBackground: #ffffff; /* White Card Background */
+             --headerBackground: rgba(244, 244, 244, 0.9); /* Semi-transparent Light Header */
+             --dividerColor: #ddd; /* Light Divider */
+             --sunColor: rgba(255, 255, 0, 0.2); /* More visible Sun */
+             --planetBaseColor: #aaa; /* Base Light Grey for Planets */
+             --planetShadowColor1: rgba(200, 200, 200, 0.5);
+             --planetShadowColor2: rgba(180, 180, 180, 0.3);
+             --planetGlowColor: rgba(0, 123, 255, 0.05); /* Subtle blue glow */
+
+             /* Code syntax colors for light mode */
+             --codeKeywordColor: #a31515; /* Dark Red */
+             --codeStringColor: #008000; /* Dark Green */
+             --codeCommentColor: #008000; /* Dark Green Italic */
+             --codeDefaultColor: #1a1a1a; /* Dark text */
+             --codeCursorColor: #1a1a1a; /* Cursor color */
+         }
+
 
         /* --- Base Styles --- */
         * {
@@ -53,12 +65,12 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif; /* Or import a clean monospace/sans-serif font */
+            font-family: 'Arial', sans-serif; /* Consider importing 'Roboto Mono' or similar */
             background-color: var(--backgroundColor);
             color: var(--textColor);
             line-height: 1.6;
-            transition: background-color 0.6s ease, color 0.6s ease; /* Smooth theme change */
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            transition: background-color 0.6s ease, color 0.6s ease;
+            overflow-x: hidden;
             position: relative;
             min-height: 100vh;
         }
@@ -72,7 +84,7 @@
              color: var(--secondaryAccentColor);
          }
 
-        /* --- Space Background with Planets/Moons --- */
+        /* --- Space Background with Planet Simulation --- */
         .backgroundContainer {
             position: fixed;
             top: 0;
@@ -87,65 +99,72 @@
 
         .animatedPlanet {
             position: absolute;
-            background-color: var(--planetColor);
             border-radius: 50%;
-            opacity: 0.8; /* Start visible */
             pointer-events: none;
-            transition: background-color 0.6s ease, opacity 0.6s ease;
+            /* Simulate spherical shape with gradients and shadows */
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0) 50%), var(--planetBaseColor);
+            box-shadow:
+                0 0 20px var(--planetGlowColor), /* Subtle glow */
+                inset 10px 10px 20px var(--planetShadowColor1),
+                inset -10px -10px 20px var(--planetShadowColor2);
+            transition: background 0.6s ease, box-shadow 0.6s ease; /* Smooth theme change */
         }
 
         /* Define planet sizes and initial positions */
-        /* Increased animation durations for smoother, slower movement */
-        .planetOne { width: 100px; height: 100px; top: 120%; left: 10%; animation: planetOrbitOne 120s linear infinite; }
-        .planetTwo { width: 80px; height: 80px; top: -20%; left: 80%; animation: planetOrbitTwo 130s linear infinite; }
-        .planetThree { width: 150px; height: 150px; top: 150%; left: 60%; animation: planetOrbitThree 150s linear infinite; }
-        .planetFour { width: 60px; height: 60px; top: -10%; left: 30%; animation: planetOrbitFour 110s linear infinite; }
-        /* Add more planets with unique classes, sizes, positions, and animation names */
+        /* Increased animation durations for smoother, slower movement across the vast "space" */
+        .planetOne { width: 150px; height: 150px; top: 120%; left: 10%; animation: planetPathOne 180s linear infinite; }
+        .planetTwo { width: 120px; height: 120px; top: -20%; left: 80%; animation: planetPathTwo 200s linear infinite; }
+        .planetThree { width: 200px; height: 200px; top: 150%; left: 60%; animation: planetPathThree 220s linear infinite; }
+        .planetFour { width: 90px; height: 90px; top: -10%; left: 30%; animation: planetPathFour 160s linear infinite; }
+         /* Add more planets with unique classes, sizes, positions, and animation names */
 
 
-        /* Keyframes for planet orbits (adjust paths as needed) */
-        @keyframes planetOrbitOne {
-            0% { transform: translate(0, 0); opacity: 0.8; }
-            50% { transform: translate(calc(100vw - 200px), calc(-150vh + 200px)); opacity: 0.5; } /* Move up-right */
-            100% { transform: translate(0, 0); opacity: 0.8; } /* Reset for loop */
+        /* Keyframes for planet paths */
+        @keyframes planetPathOne {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.6; }
+            50% { transform: translate(calc(100vw - 300px), calc(-150vh + 300px)) rotate(180deg); opacity: 0.3; } /* Move up-right */
+            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.6; } /* Reset for loop */
         }
-         @keyframes planetOrbitTwo {
-            0% { transform: translate(0, 0); opacity: 0.8; }
-            50% { transform: translate(calc(-100vw + 160px), calc(150vh - 160px)); opacity: 0.6; } /* Move down-left */
-            100% { transform: translate(0, 0); opacity: 0.8; }
+         @keyframes planetPathTwo {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.7; }
+            50% { transform: translate(calc(-100vw + 240px), calc(150vh - 240px)) rotate(180deg); opacity: 0.5; } /* Move down-left */
+            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.7; }
         }
-         @keyframes planetOrbitThree {
-             0% { transform: translate(0, 0); opacity: 0.8; }
-             40% { transform: translate(calc(-50vw + 300px), calc(-100vh + 300px)); opacity: 0.4; } /* Example diagonal path */
-             80% { transform: translate(calc(50vw - 300px), calc(100vh - 300px)); opacity: 0.4; }
-             100% { transform: translate(0, 0); opacity: 0.8; }
+         @keyframes planetPathThree {
+             0% { transform: translate(0, 0) rotate(0deg); opacity: 0.5; }
+             40% { transform: translate(calc(-50vw + 400px), calc(-100vh + 400px)) rotate(140deg); opacity: 0.3; } /* Example diagonal path */
+             80% { transform: translate(calc(50vw - 400px), calc(100vh - 400px)) rotate(280deg); opacity: 0.3; }
+             100% { transform: translate(0, 0) rotate(360deg); opacity: 0.5; }
          }
-         @keyframes planetOrbitFour {
-              0% { transform: translate(0, 0); opacity: 0.8; }
-              30% { transform: translate(0, 50vh); opacity: 0.7; }
-              70% { transform: translate(calc(100vw - 120px), 100vh); opacity: 0.5;}
-              100% { transform: translate(0, 0); opacity: 0.8; }
+         @keyframes planetPathFour {
+              0% { transform: translate(0, 0) rotate(0deg); opacity: 0.8; }
+              30% { transform: translate(0, 50vh) rotate(90deg); opacity: 0.6; }
+              70% { transform: translate(calc(100vw - 180px), 100vh) rotate(270deg); opacity: 0.4;}
+              100% { transform: translate(0, 0) rotate(360deg); opacity: 0.8; }
          }
 
 
         /* Light Mode Sun Effect */
-        body.darkMode .sunGradient {
-            opacity: 0; /* Hidden in dark mode */
+        body:not(.lightMode) .sunGradient { /* Hide in dark mode */
+            opacity: 0;
         }
 
         .sunGradient {
             position: absolute;
             top: 0; /* Position the sun */
             left: 0;
-            width: 500px; /* Size of the gradient effect */
-            height: 500px;
-            background: radial-gradient(circle, var(--sunColor) 0%, transparent 60%);
+            width: 800px; /* Size of the gradient effect */
+            height: 800px;
+            background: radial-gradient(circle, var(--sunColor) 0%, transparent 70%);
             pointer-events: none;
             transition: opacity 0.6s ease;
-            opacity: 1; /* Visible in light mode */
-             transform: translate(-250px, -250px); /* Center the gradient source */
-            z-index: -1;
+            opacity: 0; /* Initially hidden */
+             transform: translate(-400px, -400px); /* Center the gradient source */
+            z-index: -1; /* Between background and content */
         }
+         body.lightMode .sunGradient {
+             opacity: 1; /* Visible in light mode */
+         }
 
 
         /* --- Header and Navigation --- */
@@ -155,8 +174,8 @@
             left: 0;
             width: 100%;
             background-color: var(--headerBackground);
-            backdrop-filter: blur(10px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 100;
             padding: 1rem 2rem;
             border-bottom: 1px solid var(--dividerColor);
@@ -170,7 +189,8 @@
             font-size: 1.8rem;
             font-weight: bold;
             color: var(--primaryAccentColor);
-            transition: color 0.6s ease;
+            text-shadow: 0 0 5px var(--primaryAccentColor); /* Subtle glow */
+            transition: color 0.6s ease, text-shadow 0.6s ease;
         }
 
         .navList {
@@ -200,7 +220,8 @@
             width: 0;
             height: 2px;
             background-color: var(--primaryAccentColor);
-            transition: width 0.3s ease;
+            box-shadow: 0 0 5px var(--primaryAccentColor); /* Glow effect */
+            transition: width 0.3s ease, background-color 0.6s ease, box-shadow 0.6s ease;
         }
 
         .navLink:hover::after,
@@ -224,7 +245,7 @@
 
         .themeToggle:hover {
             color: var(--primaryAccentColor);
-            transform: rotate(30deg);
+            transform: rotate(360deg); /* Full rotation */
         }
 
          .menuToggle {
@@ -257,15 +278,10 @@
             flex-direction: column;
             justify-content: center;
             position: relative;
-            /* Maybe add subtle background patterns per section */
-             /* background: radial-gradient(ellipse at bottom, var(--secondaryAccentColor) 0%, transparent 80%); */
-             /* background-size: 800px 800px; */
-             /* background-repeat: no-repeat; */
-             /* background-position: center center; */
-             /* opacity: 0.05; */ /* Very subtle */
+            /* Add subtle background patterns per section if desired */
+             /* background-image: linear-gradient(0deg, transparent 98%, var(--secondaryAccentColor) 98%); */
+             /* background-size: 100% 50px; */
         }
-         /* Example of unique background per section (if needed) */
-         /* #about { background-image: ...; } */
 
         .sectionTitle {
             text-align: center;
@@ -274,6 +290,8 @@
             color: var(--primaryAccentColor);
             position: relative;
             padding-bottom: 1rem;
+             text-shadow: 0 0 8px var(--primaryAccentColor); /* Glow */
+             transition: color 0.6s ease, text-shadow 0.6s ease;
         }
 
          .sectionTitle::after {
@@ -289,59 +307,66 @@
         }
 
 
-        /* --- Home Section (Hero) - Redesigned --- */
+        /* --- Home Section (Hero) - New Tech Design --- */
         .heroSection {
-            text-align: left; /* Align left */
+            text-align: center; /* Centered text */
             padding-top: 10rem;
             min-height: calc(100vh - 80px);
-            display: flex; /* Use flex for layout */
+            display: flex;
+            flex-direction: column; /* Stacked layout */
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             gap: 2rem;
         }
 
          .heroContent {
-             flex: 1;
-             min-width: 300px;
+             max-width: 800px; /* Limit width */
+             width: 100%;
          }
         .heroSection h1 {
-            font-size: 4.5rem; /* Even larger title */
+            font-size: 4.5rem;
             margin-bottom: 1rem;
             color: var(--primaryAccentColor);
             line-height: 1.1;
+             text-shadow: 0 0 15px var(--primaryAccentColor); /* Stronger glow */
+             transition: color 0.6s ease, text-shadow 0.6s ease;
         }
 
          .heroSection p {
-            font-size: 1.8rem; /* Larger subtitle */
+            font-size: 1.8rem;
             margin-bottom: 2.5rem;
             color: var(--textColor);
             opacity: 0.9;
          }
 
-         .heroImagePlaceholder {
-             flex: 1;
-             min-width: 250px;
-             max-width: 400px;
-             height: 300px;
-             background-color: var(--cardBackground); /* Placeholder visual */
-             border: 2px solid var(--secondaryAccentColor);
-             border-radius: 8px;
-             /* Add an abstract graphic or pattern here if desired */
-              background-image: linear-gradient(45deg, var(--secondaryAccentColor) 25%, transparent 25%, transparent 75%, var(--secondaryAccentColor) 75%, var(--secondaryAccentColor)), linear-gradient(-45deg, var(--secondaryAccentColor) 25%, transparent 25%, transparent 75%, var(--secondaryAccentColor) 75%, var(--secondaryAccentColor));
-              background-size: 30px 30px;
-              opacity: 0.5;
-             transition: background-color 0.6s ease, border-color 0.6s ease;
-         }
+        .ctaButton {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primaryAccentColor), var(--secondaryAccentColor)); /* Gradient */
+            color: var(--cardBackground); /* Text color contrasts with gradient */
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.3rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--primaryAccentColor); /* Initial glow */
+        }
 
+        .ctaButton:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--primaryAccentColor), 0 0 30px var(--secondaryAccentColor); /* Enhanced glow */
+        }
 
-        /* --- About Section - Redesigned --- */
+        /* --- About Section - New Tech Design --- */
          .aboutContent {
-            display: grid; /* Use grid for layout */
-            grid-template-columns: 1.5fr 1fr; /* Code block wider than skills */
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Simple two columns */
             gap: 4rem;
-            align-items: start; /* Align items to start of grid cell */
+            align-items: start;
          }
-         .aboutText {
+         .aboutText { /* This div now wraps only the paragraph below the code block */
             font-size: 1.1rem;
          }
           .aboutText p {
@@ -365,14 +390,32 @@
          }
          .skillItem {
             background-color: var(--cardBackground);
-            padding: 0.8rem; /* Slightly smaller padding */
+            padding: 0.8rem;
             border-radius: 5px;
             text-align: center;
             border: 1px solid var(--secondaryAccentColor);
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease, border-color 0.6s ease;
              font-weight: bold;
              font-size: 0.9rem;
+             position: relative;
+             overflow: hidden;
          }
+
+          .skillItem::before { /* Subtle tech border effect */
+              content: '';
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              border: 2px solid transparent;
+              transition: border-color 0.3s ease;
+              pointer-events: none;
+          }
+         .skillItem:hover::before {
+             border-color: var(--primaryAccentColor);
+         }
+
          .skillItem:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
@@ -393,10 +436,8 @@
              position: relative;
              transition: background-color 0.6s ease, border-color 0.6s ease;
              font-size: 1rem;
+             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
          }
-          .aboutText > p { /* Style paragraph below code block */
-             margin-top: 2rem;
-          }
 
 
          .aboutCodeBlock span {
@@ -405,7 +446,7 @@
          }
           .aboutCodeBlock span.visible {
              opacity: 1;
-             transition: opacity 0.03s linear; /* Faster reveal */
+             transition: opacity 0.03s linear;
           }
 
          /* Syntax Highlighting Classes (for JS to add) */
@@ -433,26 +474,46 @@
          }
 
 
-        /* --- Projects Section - Redesigned --- */
+        /* --- Projects Section - New Tech Design --- */
         .projectGrid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjusted min width */
-            gap: 2.5rem; /* Adjusted gap */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
         }
 
         .projectCard {
             background-color: var(--cardBackground);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18); /* More pronounced shadow */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease;
             border: 1px solid var(--secondaryAccentColor);
             display: flex;
             flex-direction: column;
+             position: relative; /* For pseudo-elements */
+             z-index: 0;
         }
 
+         .projectCard::before { /* Angular border effect */
+             content: '';
+             position: absolute;
+             top: -5px;
+             left: -5px;
+             right: -5px;
+             bottom: -5px;
+             border: 3px solid transparent;
+             border-image: linear-gradient(45deg, var(--primaryAccentColor) 0%, transparent 50%, var(--primaryAccentColor) 100%) 1;
+             transition: border-image 0.3s ease;
+             opacity: 0;
+             z-index: -1;
+         }
+         .projectCard:hover::before {
+             opacity: 1;
+         }
+
+
         .projectCard:hover {
-            transform: translateY(-15px); /* More pronounced hover */
+            transform: translateY(-15px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
         }
 
@@ -462,7 +523,7 @@
         }
         .projectImage {
             width: 100%;
-            height: 200px; /* Adjusted height */
+            height: 200px;
             object-fit: cover;
             transition: transform 0.5s ease;
         }
@@ -471,7 +532,7 @@
         }
 
         .projectInfo {
-            padding: 1.5rem; /* Adjusted padding */
+            padding: 1.5rem;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -481,6 +542,8 @@
             font-size: 1.5rem;
             margin-bottom: 0.8rem;
             color: var(--primaryAccentColor);
+             text-shadow: 0 0 5px var(--primaryAccentColor); /* Subtle glow */
+             transition: color 0.6s ease, text-shadow 0.6s ease;
         }
 
         .projectDescription {
@@ -496,7 +559,25 @@
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s ease, transform 0.2s ease;
+             position: relative; /* For hover effect */
         }
+
+         .projectLinks a::after { /* Underline effect */
+             content: '';
+             position: absolute;
+             left: 0;
+             bottom: -3px;
+             width: 100%;
+             height: 1px;
+             background-color: var(--primaryAccentColor);
+             transform: scaleX(0);
+             transform-origin: bottom right;
+             transition: transform 0.3s ease;
+         }
+         .projectLinks a:hover::after {
+             transform: scaleX(1);
+             transform-origin: bottom left;
+         }
 
         .projectLinks a:hover {
             color: var(--primaryAccentColor);
@@ -504,15 +585,15 @@
         }
 
 
-        /* --- Experiences Section - Redesigned (Timeline Style) --- */
+        /* --- Experiences Section - New Tech Design (Timeline Style) --- */
          .experienceList {
              position: relative;
-             padding-left: 20px; /* Space for timeline line */
+             padding-left: 60px; /* Space for timeline line and dots */
          }
          .experienceList::before { /* Vertical timeline line */
              content: '';
              position: absolute;
-             left: 0;
+             left: 20px; /* Position the line */
              top: 0;
              bottom: 0;
              width: 2px;
@@ -527,30 +608,32 @@
             border: 1px solid var(--secondaryAccentColor);
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease, border-color 0.6s ease;
             position: relative;
-            margin-left: 20px; /* Push item right to align with line */
+            margin-left: 0; /* Remove margin */
          }
 
           .experienceItem::before { /* Timeline dot */
              content: '';
              position: absolute;
-             left: -28px; /* Position dot on the line */
-             top: 1.8rem; /* Align with top of item padding */
+             left: -40px; /* Position dot on the line */
+             top: 1.8rem;
              width: 16px;
              height: 16px;
              background-color: var(--primaryAccentColor);
              border-radius: 50%;
-             border: 3px solid var(--backgroundColor); /* Border matches background */
-             z-index: 1; /* Above the line */
+             border: 4px solid var(--backgroundColor); /* Border matches background */
+             z-index: 1;
              transition: background-color 0.6s ease, border-color 0.6s ease;
+              box-shadow: 0 0 8px var(--primaryAccentColor); /* Dot glow */
           }
 
 
          .experienceItem:hover {
-            transform: translateX(0); /* Disable left/right slide */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* More subtle shadow on hover */
+            transform: translateY(-5px); /* Subtle lift */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
          }
           .experienceItem:hover::before {
               background-color: var(--secondaryAccentColor); /* Change dot color on hover */
+               box-shadow: 0 0 12px var(--secondaryAccentColor); /* Dot glow on hover */
           }
 
          .experienceTitle {
@@ -581,20 +664,20 @@
            }
 
 
-        /* --- Contact Section - Redesigned --- */
+        /* --- Contact Section - New Tech Design --- */
         .contactInfo {
             text-align: center;
-            max-width: 600px; /* Limit width */
-            margin: 0 auto; /* Center the block */
+            max-width: 600px;
+            margin: 0 auto;
             background-color: var(--cardBackground);
-            padding: 3rem; /* More padding */
+            padding: 3rem;
             border-radius: 8px;
             border: 1px solid var(--secondaryAccentColor);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 0 20px var(--primaryAccentColor) inset; /* Inner glow */
             transition: background-color 0.6s ease, border-color 0.6s ease, box-shadow 0.3s ease;
         }
          .contactInfo:hover {
-             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 30px var(--primaryAccentColor) inset; /* Enhanced inner glow */
          }
         .contactInfo p {
             font-size: 1.2rem;
@@ -709,6 +792,7 @@
                  text-align: center; /* Center text */
                  padding-top: 5rem;
                  min-height: auto;
+                 gap: 1.5rem; /* Reduce gap */
              }
               .heroContent {
                   min-width: auto;
@@ -720,11 +804,6 @@
                .heroSection p {
                   font-size: 1.4rem; /* Adjust font size */
                }
-             .heroImagePlaceholder {
-                 width: 80%; /* Adjust size */
-                 height: 200px; /* Adjust height */
-                 margin: 2rem auto 0; /* Center below text */
-             }
 
 
             .sectionTitle {
@@ -772,6 +851,10 @@
              .projectCard {
                  flex-direction: column;
              }
+              .projectCard::before { /* Adjust angular border on mobile */
+                 top: -3px; left: -3px; right: -3px; bottom: -3px;
+                 border-width: 2px;
+              }
              .projectImage {
                  height: 160px;
              }
@@ -790,22 +873,22 @@
              }
 
               .experienceList {
-                  padding-left: 0; /* Remove padding */
+                  padding-left: 0;
               }
                .experienceList::before {
-                  left: 50%; /* Center line */
+                  left: 50%;
                   transform: translateX(-50%);
                }
              .experienceItem {
                  padding: 1.5rem;
                  margin-bottom: 2rem;
-                 margin-left: 0; /* Remove left margin */
-                 text-align: center; /* Center text */
+                 margin-left: 0;
+                 text-align: center;
              }
               .experienceItem::before {
-                 left: 50%; /* Center dot */
+                 left: 50%;
                  transform: translateX(-50%);
-                  top: -10px; /* Position above the card */
+                  top: -10px;
               }
               .experienceTitle {
                  font-size: 1.3rem;
@@ -815,25 +898,25 @@
               }
               .experienceItem ul {
                   margin-left: 0;
-                  list-style-position: inside; /* List dots inside */
+                  list-style-position: inside;
                   font-size: 0.9rem;
               }
                 .experienceItem ul li {
-                     text-align: left; /* Align list text left */
+                     text-align: left;
                      margin-bottom: 0.3rem;
                 }
 
 
               .contactInfo {
-                  padding: 2rem; /* Adjust padding */
-                  box-shadow: none; /* Remove shadow on mobile */
-                  border: none; /* Remove border on mobile */
-                  background-color: transparent; /* Transparent background */
+                  padding: 2rem;
+                  box-shadow: none;
+                  border: none;
+                  background-color: transparent;
               }
-              .contactInfo:hover {
+               .contactInfo:hover {
                    box-shadow: none;
-              }
-              .contactInfo p {
+               }
+               .contactInfo p {
                   font-size: 1.1rem;
                   margin-bottom: 1rem;
               }
@@ -852,8 +935,8 @@
 <body>
 
     <div class="backgroundContainer">
-        <div class="backgroundLayer" style="background-image: radial-gradient(circle, var(--secondaryAccentColor) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.1; z-index: -1;"></div>
-         <div class="backgroundLayer" style="background-image: linear-gradient(to right, var(--secondaryAccentColor) 1px, transparent 1px), linear-gradient(to bottom, var(--secondaryAccentColor) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.05; z-index: -1;"></div>
+        <div class="backgroundLayer" style="background-image: radial-gradient(circle, var(--secondaryAccentColor) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.05; z-index: -1;"></div>
+         <div class="backgroundLayer" style="background-image: linear-gradient(to right, var(--secondaryAccentColor) 1px, transparent 1px), linear-gradient(to bottom, var(--secondaryAccentColor) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.02; z-index: -1;"></div>
 
         <div class="animatedPlanet planetOne"></div>
         <div class="animatedPlanet planetTwo"></div>
@@ -883,33 +966,26 @@
                  <p>A Passionate Frontend Developer Crafting Seamless Web Experiences.</p>
                  <a href="#projects" class="ctaButton">View My Work</a>
             </div>
-             <div class="heroImagePlaceholder animateOnScroll">
-                 </div>
-        </section>
+             </section>
 
         <section id="about" class="contentSection aboutSection animateOnScroll">
             <h2 class="sectionTitle">About Me</h2>
             <div class="aboutContent">
-                <div class="aboutText">
-                     <div class="aboutCodeBlock">
-                         <span class="comment">// About Farhad</span>
-                         <span class="default"><br><br>const </span><span class="keyword">farhad</span><span class="default"> = {<br></span>
-                         <span class="default">&nbsp;&nbsp;title: </span><span class="string">'Frontend Developer'</span><span class="default">,<br></span>
-                         <span class="default">&nbsp;&nbsp;location: </span><span class="string">'Earth, Solar System'</span><span class="default">, </span><span class="comment">// Sometimes feels like Mars</span>
-                         <span class="default"><br>&nbsp;&nbsp;skills: [</span><span class="string">'HTML'</span><span class="default">, </span><span class="string">'CSS'</span><span class="default">, </span><span class="string">'JavaScript'</span><span class="default">, </span><span class="string">'React'</span><span class="default">, </span><span class="string">'Vue'</span><span class="default">, </span><span class="string">'Git'</span><span class="default">, </span><span class="string">'Responsive Design'</span><span class="default">],<br></span>
-                         <span class="default">&nbsp;&nbsp;passion: </span><span class="string">'Building intuitive and beautiful user interfaces.'</span><span class="default">,<br></span>
-                         <span class="default">&nbsp;&nbsp;approach: </span><span class="string">'Clean code, user-centric design, continuous learning.'</span><span class="default">,<br></span>
-                         <span class="default">&nbsp;&nbsp;contact: </span><span class="default">() => {<br></span>
-                         <span class="default">&nbsp;&nbsp;&nbsp;&nbsp;console.log(</span><span class="string">'Let\'s connect and build something awesome!'</span><span class="default">);<br></span>
-                         <span class="default">&nbsp;&nbsp;}</span>
-                         <span class="default"><br>};<br><br></span>
-                         <span class="comment">// Scroll down to see my work and experience!</span>
-                     </div>
-                     <p>
-                        Beyond the code, I'm passionate about turning complex problems into simple, elegant solutions. I thrive in environments where I can learn and contribute to projects that make a real impact.
-                     </p>
-                </div>
-                <div class="aboutSkills">
+                 <div class="aboutCodeBlock animateOnScroll">
+                     <span class="comment">// About Farhad</span>
+                     <span class="default"><br><br>const </span><span class="keyword">farhad</span><span class="default"> = {<br></span>
+                     <span class="default">&nbsp;&nbsp;title: </span><span class="string">'Frontend Developer'</span><span class="default">,<br></span>
+                     <span class="default">&nbsp;&nbsp;location: </span><span class="string">'Earth, Solar System'</span><span class="default">, </span><span class="comment">// Sometimes feels like Mars</span>
+                     <span class="default"><br>&nbsp;&nbsp;skills: [</span><span class="string">'HTML'</span><span class="default">, </span><span class="string">'CSS'</span><span class="default">, </span><span class="string">'JavaScript'</span><span class="default">, </span><span class="string">'React'</span><span class="default">, </span><span class="string">'Vue'</span><span class="default">, </span><span class="string">'Git'</span><span class="default">, </span><span class="string">'Responsive Design'</span><span class="default">],<br></span>
+                     <span class="default">&nbsp;&nbsp;passion: </span><span class="string">'Building intuitive and beautiful user interfaces.'</span><span class="default">,<br></span>
+                     <span class="default">&nbsp;&nbsp;approach: </span><span class="string">'Clean code, user-centric design, continuous learning.'</span><span class="default">,<br></span>
+                     <span class="default">&nbsp;&nbsp;contact: </span><span class="default">() => {<br></span>
+                     <span class="default">&nbsp;&nbsp;&nbsp;&nbsp;console.log(</span><span class="string">'Let\'s connect and build something awesome!'</span><span class="default">);<br></span>
+                     <span class="default">&nbsp;&nbsp;}</span>
+                     <span class="default"><br>};<br><br></span>
+                     <span class="comment">// Scroll down to see my work and experience!</span>
+                 </div>
+                <div class="aboutSkills animateOnScroll">
                      <h3>Tech Stack</h3>
                      <ul class="skillList">
                          <li class="skillItem">HTML5</li>
@@ -1032,21 +1108,24 @@
 
             // --- Theme Toggle ---
             const storedTheme = localStorage.getItem('theme');
-            if (storedTheme === 'darkMode') {
-                body.classList.add('darkMode');
-                themeToggle.textContent = '☀️'; // Sun icon in dark mode
-            } else {
+            // Default is dark mode now
+            if (storedTheme === 'lightMode') {
+                body.classList.add('lightMode');
                  themeToggle.textContent = '🌙'; // Moon icon in light mode
+            } else {
+                body.classList.remove('lightMode'); // Ensure dark mode if no preference or preference is dark
+                themeToggle.textContent = '☀️'; // Sun icon in dark mode
             }
 
+
             themeToggle.addEventListener('click', () => {
-                body.classList.toggle('darkMode');
-                if (body.classList.contains('darkMode')) {
-                    localStorage.setItem('theme', 'darkMode');
-                    themeToggle.textContent = '☀️'; // Sun icon
-                } else {
+                body.classList.toggle('lightMode');
+                if (body.classList.contains('lightMode')) {
                     localStorage.setItem('theme', 'lightMode');
                     themeToggle.textContent = '🌙'; // Moon icon
+                } else {
+                    localStorage.setItem('theme', 'darkMode'); // Store 'darkMode'
+                    themeToggle.textContent = '☀️'; // Sun icon
                 }
             });
 
@@ -1158,7 +1237,9 @@
 
             // Observe the About section
             if (aboutCodeBlock) {
-                 aboutCodeObserver.observe(aboutCodeBlock.closest('.contentSection')); // Observe the parent section
+                 // Note: aboutCodeBlock itself is now animateOnScroll, its parent section is also animateOnScroll.
+                 // We want to trigger typing when aboutCodeBlock itself comes into view.
+                 aboutCodeObserver.observe(aboutCodeBlock);
             }
 
 
