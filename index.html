@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frontend Developer Portfolio</title>
+    <title>Creative Frontend Portfolio</title>
     <style>
-        /* Global Styles & Resets */
+        /* --- Global Styles, Variables & Resets --- */
         :root {
-            --primaryColor: #0a192f; /* Deep Navy */
-            --secondaryColor: #64ffda; /* Bright Aqua */
-            --lightestNavy: #233554;
-            --lightNavy: #112240;
-            --slate: #8892b0;
-            --lightSlate: #a8b2d1;
-            --lightestSlate: #ccd6f6;
-            --white: #e6f1ff;
-            --fontSans: 'Calibri', 'San Francisco', 'SF Pro Text', -apple-system, system-ui, sans-serif;
-            --fontMono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
-            --transitionSpeed: 0.3s;
+            --bgColor: #121212; /* Very dark grey, almost black */
+            --primaryAccentColor: #00f2ea; /* Vibrant Teal/Cyan */
+            --secondaryAccentColor: #ff007f; /* Vibrant Pink/Magenta */
+            --textColor: #e0e0e0; /* Light grey for text */
+            --headingColor: #ffffff;
+            --cardBgColor: #1e1e1e; /* Slightly lighter dark for cards */
+            --borderColor: #333333;
+            --fontPrimary: 'Poppins', 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Modern, geometric sans-serif */
+            --fontSecondary: 'Roboto Mono', 'Courier New', Courier, monospace; /* For code snippets or secondary text */
+            --transitionSpeed: 0.4s;
+            --cubicBezier: cubic-bezier(0.645, 0.045, 0.355, 1); /* Common easing for smooth animations */
+            --navHeight: 70px;
         }
+
+        /* Import Poppins font (you can host it or use other fonts) */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Mono:wght@400;500&display=swap');
 
         * {
             margin: 0;
@@ -27,417 +31,737 @@
         }
 
         html {
-            scroll-behavior: smooth; /* For smooth scroll on nav links */
+            scroll-behavior: smooth;
+            font-size: 16px; /* Base font size */
         }
 
         body {
-            font-family: var(--fontSans);
-            background-color: var(--primaryColor);
-            color: var(--slate);
-            line-height: 1.6;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            font-family: var(--fontPrimary);
+            background-color: var(--bgColor);
+            color: var(--textColor);
+            line-height: 1.7;
+            overflow-x: hidden; /* Crucial for preventing horizontal scroll */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Navigation */
+        /* --- SVG Icons (Embedded) --- */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.125em; /* Adjust for better alignment with text */
+            fill: currentColor;
+        }
+
+        /* --- Navigation --- */
         .mainNav {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
+            height: var(--navHeight);
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between; /* Logo on left, links on right */
             align-items: center;
-            padding: 20px 40px;
-            background-color: rgba(10, 25, 47, 0.85); /* primaryColor with transparency */
+            padding: 0 40px;
+            background-color: rgba(18, 18, 18, 0.85); /* --bgColor with transparency */
             backdrop-filter: blur(10px);
             z-index: 1000;
-            transition: top var(--transitionSpeed) ease-in-out;
+            transition: top var(--transitionSpeed) ease-in-out, background-color var(--transitionSpeed);
+            border-bottom: 1px solid transparent; /* Initially transparent */
         }
-
+        .mainNav.navScrolled {
+            background-color: rgba(25, 25, 25, 0.9); /* Darker on scroll */
+            border-bottom: 1px solid var(--borderColor);
+        }
         .mainNav.navHidden {
-            top: -100px;
+            top: calc(-1 * var(--navHeight));
         }
+        .logoContainer a {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--headingColor);
+            text-decoration: none;
+            letter-spacing: -1px;
+        }
+        .logoContainer .dot { color: var(--primaryAccentColor); }
 
         .mainNav ul {
             list-style: none;
             display: flex;
         }
-
         .mainNav ul li {
-            margin-left: 25px;
+            margin-left: 30px;
         }
-
         .mainNav ul li a {
             text-decoration: none;
-            color: var(--lightestSlate);
+            color: var(--textColor);
             font-weight: 500;
-            padding: 10px;
+            padding: 10px 0; /* Padding for hover effect */
+            position: relative; /* For underline animation */
             transition: color var(--transitionSpeed) ease;
         }
-
+        .mainNav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primaryAccentColor);
+            transition: width var(--transitionSpeed) var(--cubicBezier);
+        }
         .mainNav ul li a:hover,
         .mainNav ul li a.activeSectionLink {
-            color: var(--secondaryColor);
+            color: var(--primaryAccentColor);
+        }
+        .mainNav ul li a:hover::after,
+        .mainNav ul li a.activeSectionLink::after {
+            width: 100%;
         }
 
-        /* Page Sections General Styling */
+        /* Mobile Navigation (Basic Example - can be expanded) */
+        .menuToggle {
+            display: none; /* Hidden on desktop */
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        .menuToggle .icon {
+            width: 28px;
+            height: 28px;
+            color: var(--headingColor);
+        }
+
+        /* --- Page Sections General Styling --- */
         .pageSection {
-            min-height: 100vh; /* Full viewport height */
+            min-height: 100vh;
             width: 100%;
-            padding: 100px 50px 50px; /* Top padding for nav, side and bottom padding */
+            padding: calc(var(--navHeight) + 60px) 5% 60px; /* Top padding for nav, dynamic side/bottom */
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative; /* For parallax effect and z-indexing */
-            opacity: 0; /* Initially hidden for entry animation */
-            transform: translateY(50px); /* Initial position for entry animation */
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-            z-index: 1; /* Base z-index */
+            justify-content: center; /* Vertically center content */
+            align-items: center; /* Horizontally center content for most sections */
+            position: relative; /* For parallax and absolute positioning inside */
+            overflow: hidden; /* Clip content that might overflow during animations */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s var(--cubicBezier), transform 0.8s var(--cubicBezier);
+            will-change: opacity, transform; /* Performance hint */
         }
-
         .pageSection.isActive {
             opacity: 1;
             transform: translateY(0);
         }
 
         .sectionTitle {
-            font-size: 2.5rem;
-            color: var(--lightestSlate);
-            margin-bottom: 10px;
+            font-size: clamp(2.5rem, 5vw, 4rem); /* Responsive title */
+            color: var(--headingColor);
+            margin-bottom: 20px;
+            text-align: center;
             position: relative;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
+            font-weight: 700;
         }
-
-        .sectionTitle::after {
+        .sectionTitle::after { /* More subtle underline */
             content: '';
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background-color: var(--secondaryColor);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primaryAccentColor), var(--secondaryAccentColor));
+            border-radius: 2px;
         }
-
         .sectionSubtitle {
-            font-size: 1.2rem;
-            color: var(--secondaryColor);
-            margin-bottom: 40px;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--textColor);
+            margin-bottom: 50px;
+            text-align: center;
+            max-width: 700px;
         }
-
         .contentWrapper {
-            max-width: 900px;
+            max-width: 1100px; /* Max width for content */
             width: 100%;
+            margin: 0 auto;
         }
 
-        /* Parallax-like Scrolling: Sections "slide over" */
-        /* This is achieved by z-index and JavaScript-controlled visibility.
-           A more complex JS solution would be needed for true continuous sliding.
-           This approach makes sections appear on top of each other as you scroll.
-           We use JS to activate sections and control their z-index. */
+        /* --- Parallax "Page on Top" Effect --- */
+        /* Achieved by making sections sticky and controlling z-index.
+           The section content itself will scroll. The *next* section will come on top. */
+        #homeSection { z-index: 5; }
+        #aboutSection { position: sticky; top: 0; z-index: 6; background-color: var(--bgColor);}
+        #experiencesSection { position: sticky; top: 0; z-index: 7; background-color: var(--bgColor);}
+        #projectsSection { position: sticky; top: 0; z-index: 8; background-color: var(--bgColor);}
+        #contactSection { position: sticky; top: 0; z-index: 9; background-color: var(--bgColor);}
+        /* Note: Sticky positioning can be tricky with overflow. Ensure parent elements don't clip.
+           For this single file, body is the main scroller. */
 
-        #homeSection { z-index: 5; background: linear-gradient(135deg, var(--primaryColor) 0%, var(--lightNavy) 100%); }
-        #aboutSection { z-index: 4; background: linear-gradient(135deg, var(--lightNavy) 0%, #1a3a6d 100%); } /* Slightly different shade */
-        #experiencesSection { z-index: 3; background: linear-gradient(135deg, #1a3a6d 0%, var(--lightestNavy) 100%); }
-        #projectsSection { z-index: 2; background: linear-gradient(135deg, var(--lightestNavy) 0%, #2a4a7d 100%); }
-        #contactSection { z-index: 1; background: linear-gradient(135deg, #2a4a7d 0%, var(--primaryColor) 100%); }
 
-
-        /* Home Section */
+        /* --- Home Section (Unique Design) --- */
         .homeSection {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: left;
-            align-items: flex-start; /* Align content to the start for a common hero layout */
-            padding-left: 10%; /* More padding on the left for hero text */
-            padding-right: 10%;
+            background: linear-gradient(135deg, var(--bgColor) 0%, #1a1a2e 100%); /* Dark subtle gradient */
+            /* Particles or animated background could go here */
         }
-
-        .homeSection h1 {
-            font-size: clamp(40px, 8vw, 80px); /* Responsive font size */
-            color: var(--lightestSlate);
-            margin: 0;
-            line-height: 1.1;
+        .homeContent {
+            max-width: 800px;
         }
-
-        .homeSection .nameHighlight {
-            color: var(--secondaryColor);
-        }
-
-        .homeSection .subHeading {
-            font-size: clamp(20px, 4vw, 30px);
-            color: var(--slate);
-            margin-top: 10px;
-            margin-bottom: 30px;
-        }
-
-        .homeSection .introParagraph {
+        .homeGreeting {
+            color: var(--primaryAccentColor);
+            font-family: var(--fontSecondary);
             font-size: 1.1rem;
-            color: var(--lightSlate);
+            margin-bottom: 15px;
+            animation: fadeInSlideUp 0.5s var(--cubicBezier) 0.2s forwards;
+            opacity:0;
+        }
+        .homeName {
+            font-size: clamp(3rem, 8vw, 6rem);
+            color: var(--headingColor);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            animation: fadeInSlideUp 0.6s var(--cubicBezier) 0.4s forwards;
+            opacity:0;
+        }
+        .homeTagline {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            color: var(--textColor);
+            margin-bottom: 30px;
+            animation: fadeInSlideUp 0.7s var(--cubicBezier) 0.6s forwards;
+            opacity:0;
+        }
+        .homeBio {
+            font-size: 1.1rem;
+            color: var(--textColor);
             max-width: 600px;
             margin-bottom: 40px;
+            animation: fadeInSlideUp 0.8s var(--cubicBezier) 0.8s forwards;
+            opacity:0;
         }
-
-        .ctaButton {
+        .homeCtaButton {
             display: inline-block;
-            padding: 15px 30px;
-            border: 1px solid var(--secondaryColor);
-            color: var(--secondaryColor);
+            padding: 15px 35px;
+            background: transparent;
+            border: 2px solid var(--primaryAccentColor);
+            color: var(--primaryAccentColor);
             text-decoration: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            transition: background-color var(--transitionSpeed) ease, color var(--transitionSpeed) ease;
-        }
-
-        .ctaButton:hover {
-            background-color: var(--secondaryColor);
-            color: var(--primaryColor);
-        }
-
-        /* About Section */
-        .aboutSection .contentWrapper {
-            display: flex;
-            flex-direction: column; /* Stack on small screens */
-            align-items: center;
-            gap: 40px;
-        }
-        @media (min-width: 768px) {
-            .aboutSection .contentWrapper {
-                flex-direction: row; /* Side-by-side on larger screens */
-                text-align: left;
-            }
-        }
-
-        .aboutText {
-            flex: 2;
+            border-radius: 50px; /* Pill shape */
             font-size: 1.1rem;
-            color: var(--lightSlate);
+            font-weight: 600;
+            transition: background-color var(--transitionSpeed) ease, color var(--transitionSpeed) ease, transform var(--transitionSpeed) ease;
+            animation: fadeInScaleUp 0.6s var(--cubicBezier) 1s forwards;
+            opacity:0;
+            transform: scale(0.9);
+        }
+        .homeCtaButton:hover {
+            background-color: var(--primaryAccentColor);
+            color: var(--bgColor);
+            transform: translateY(-3px) scale(1.02);
         }
 
-        .aboutText p {
-            margin-bottom: 15px;
+        @keyframes fadeInSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInScaleUp {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        .skillsList {
-            list-style: none;
+        /* --- About Section (Unique Design) --- */
+        .aboutSection {
+            background-color: #16161d; /* Slightly different dark */
+        }
+        .aboutSection .contentWrapper {
             display: grid;
-            grid-template-columns: repeat(2, minmax(140px, 200px));
-            gap: 10px;
-            margin-top: 20px;
-            padding: 0;
+            grid-template-columns: 1fr 1fr; /* Two columns */
+            gap: 60px;
+            align-items: center;
         }
-
-        .skillsList li {
-            position: relative;
-            padding-left: 20px;
-            font-family: var(--fontMono);
+        .aboutTextContent {
+            text-align: left;
+        }
+        .aboutTextContent p {
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        .aboutTextContent .highlight {
+            color: var(--secondaryAccentColor);
+            font-weight: 600;
+        }
+        .skillsGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .skillItem {
+            background-color: var(--cardBgColor);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-family: var(--fontSecondary);
             font-size: 0.9rem;
-            color: var(--slate);
+            text-align: center;
+            border: 1px solid var(--borderColor);
+            transition: transform var(--transitionSpeed) ease, box-shadow var(--transitionSpeed) ease;
         }
-
-        .skillsList li::before {
-            content: '▹';
-            position: absolute;
-            left: 0;
-            color: var(--secondaryColor);
+        .skillItem:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 242, 234, 0.1);
         }
-
         .aboutImageContainer {
-            flex: 1;
-            max-width: 300px; /* Max width for the image */
-            width: 100%;
+            position: relative; /* For pseudo-elements */
+            max-width: 400px; /* Control image size */
+            margin: 0 auto; /* Center if column becomes single */
         }
-
         .aboutImageContainer img {
             width: 100%;
             height: auto;
-            border-radius: 8px;
-            border: 2px solid var(--secondaryColor);
-            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+            border-radius: 12px;
+            border: 3px solid var(--primaryAccentColor);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
         }
-
-
-        /* Experiences Section */
-        .experiencesGrid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 30px;
+        /* Decorative element for image */
+        .aboutImageContainer::before {
+            content: '';
+            position: absolute;
             width: 100%;
+            height: 100%;
+            border: 3px solid var(--secondaryAccentColor);
+            border-radius: 12px;
+            top: 15px;
+            left: 15px;
+            z-index: 0;
+            transition: transform var(--transitionSpeed) var(--cubicBezier);
+        }
+        .aboutImageContainer:hover::before {
+            transform: translate(-5px, -5px);
         }
 
-        .experienceItem {
-            background-color: var(--lightNavy);
-            padding: 25px;
+
+        /* --- Experiences Section (Unique Timeline Design) --- */
+        .experiencesSection {
+            background-color: var(--bgColor);
+        }
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        .timeline::after { /* The central line of the timeline */
+            content: '';
+            position: absolute;
+            width: 4px;
+            background: linear-gradient(var(--primaryAccentColor), var(--secondaryAccentColor));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            border-radius: 2px;
+        }
+        .timelineItem {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        /* The circles on the timeline */
+        .timelineItem::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -12px; /* Adjust to center on line */
+            background-color: var(--bgColor);
+            border: 4px solid var(--primaryAccentColor);
+            top: 25px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timelineItem.left { left: 0; }
+        .timelineItem.right { left: 50%; }
+        .timelineItem.right::after { left: -8px; } /* Adjust for right side */
+
+        .timelineContent {
+            padding: 20px 30px;
+            background-color: var(--cardBgColor);
+            position: relative;
             border-radius: 8px;
-            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+            border: 1px solid var(--borderColor);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: transform var(--transitionSpeed) ease, box-shadow var(--transitionSpeed) ease;
-            text-align: left;
         }
-
-        .experienceItem:hover {
+        .timelineContent:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px -15px rgba(2,12,27,0.8);
+            box-shadow: 0 10px 25px rgba(0, 242, 234, 0.15);
         }
-
-        .experienceItem h3 {
-            color: var(--lightestSlate);
-            font-size: 1.5rem;
+        .timelineContent h3 {
+            color: var(--headingColor);
+            font-size: 1.4rem;
             margin-bottom: 5px;
         }
-
-        .experienceItem .companyName {
-            color: var(--secondaryColor);
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .experienceItem .dateRange {
-            color: var(--lightSlate);
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-            font-family: var(--fontMono);
-        }
-
-        .experienceItem .description {
-            color: var(--slate);
+        .timelineContent .companyName {
+            color: var(--primaryAccentColor);
             font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .timelineContent .dateRange {
+            color: var(--textColor);
+            font-size: 0.85rem;
+            font-family: var(--fontSecondary);
+            margin-bottom: 12px;
+            opacity: 0.8;
+        }
+        .timelineContent .description {
+            font-size: 0.95rem;
+            color: var(--textColor);
+        }
+        .timelineContent .description li {
+            margin-bottom: 5px;
+            padding-left: 15px;
+            position: relative;
+        }
+        .timelineContent .description li::before { /* Custom bullet */
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.5em;
+            width: 6px;
+            height: 6px;
+            background-color: var(--secondaryAccentColor);
+            border-radius: 50%;
         }
 
-        /* Projects Section */
+        /* --- Projects Section (Interactive Card Grid) --- */
+        .projectsSection {
+            background-color: #16161d;
+        }
         .projectsGrid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            width: 100%;
+            gap: 30px;
         }
-
         .projectCard {
-            background-color: var(--lightNavy);
-            border-radius: 8px;
+            background-color: var(--cardBgColor);
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
-            transition: transform var(--transitionSpeed) ease, box-shadow var(--transitionSpeed) ease;
+            border: 1px solid var(--borderColor);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: transform var(--transitionSpeed) var(--cubicBezier), box-shadow var(--transitionSpeed) var(--cubicBezier);
             display: flex;
             flex-direction: column;
-            text-align: left;
         }
-
         .projectCard:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px -15px rgba(2,12,27,0.8);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 242, 234, 0.15);
         }
-
         .projectImageContainer {
             width: 100%;
-            height: 200px; /* Fixed height for image container */
-            background-color: var(--lightestNavy); /* Placeholder background */
+            height: 220px;
             overflow: hidden;
+            position: relative;
         }
-
         .projectImageContainer img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Cover the area, might crop */
-            transition: transform 0.4s ease;
+            object-fit: cover;
+            transition: transform 0.6s var(--cubicBezier);
         }
         .projectCard:hover .projectImageContainer img {
-            transform: scale(1.05);
+            transform: scale(1.1);
         }
-
         .projectInfo {
-            padding: 20px;
-            flex-grow: 1; /* Allows this part to take remaining space */
+            padding: 25px;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
         }
-
         .projectInfo h3 {
-            color: var(--lightestSlate);
-            font-size: 1.3rem;
+            color: var(--headingColor);
+            font-size: 1.5rem;
             margin-bottom: 10px;
         }
-
         .projectInfo .description {
-            color: var(--slate);
+            color: var(--textColor);
             font-size: 0.95rem;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             flex-grow: 1;
+            opacity: 0.9;
         }
-
         .projectTechList {
             list-style: none;
-            padding: 0;
-            margin: 15px 0;
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
+            margin-bottom: 20px;
         }
-
         .projectTechList li {
-            font-family: var(--fontMono);
+            font-family: var(--fontSecondary);
             font-size: 0.8rem;
-            color: var(--secondaryColor);
-            background-color: var(--lightestNavy);
-            padding: 3px 8px;
-            border-radius: 3px;
+            color: var(--primaryAccentColor);
+            background-color: rgba(0, 242, 234, 0.1); /* Teal transparent bg */
+            padding: 5px 10px;
+            border-radius: 20px; /* Pill shape tags */
         }
-
         .projectLinks a {
-            color: var(--secondaryColor);
+            color: var(--secondaryAccentColor);
             text-decoration: none;
-            margin-right: 15px;
-            font-size: 1.2rem;
+            margin-right: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: color var(--transitionSpeed);
         }
+        .projectLinks a .icon { width: 1.2em; height: 1.2em; margin-right: 5px; }
         .projectLinks a:hover {
+            color: var(--primaryAccentColor);
             text-decoration: underline;
         }
 
-        /* Contact Section */
+        /* --- Contact Section (Creative Layout) --- */
+        .contactSection {
+            background: linear-gradient(-135deg, var(--bgColor) 0%, #1a1a2e 100%);
+        }
         .contactSection .contentWrapper {
-            max-width: 700px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: flex-start; /* Align items to top */
+        }
+        .contactInfo p {
+            font-size: 1.1rem;
+            margin-bottom: 25px;
+        }
+        .contactDetailsList {
+            list-style: none;
+        }
+        .contactDetailsList li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1rem;
+        }
+        .contactDetailsList li .icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            color: var(--primaryAccentColor);
         }
         .contactForm {
             display: flex;
             flex-direction: column;
             gap: 20px;
-            width: 100%;
-            margin-top: 30px;
         }
-
         .contactForm input,
         .contactForm textarea {
-            padding: 15px;
-            border-radius: 4px;
-            border: 1px solid var(--lightestNavy);
-            background-color: var(--lightNavy);
-            color: var(--lightestSlate);
-            font-family: var(--fontSans);
+            padding: 18px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--borderColor);
+            background-color: var(--cardBgColor);
+            color: var(--textColor);
+            font-family: var(--fontPrimary);
             font-size: 1rem;
+            transition: border-color var(--transitionSpeed);
         }
-
         .contactForm input::placeholder,
         .contactForm textarea::placeholder {
-            color: var(--slate);
+            color: #777;
         }
-
+        .contactForm input:focus,
+        .contactForm textarea:focus {
+            outline: none;
+            border-color: var(--primaryAccentColor);
+            box-shadow: 0 0 0 3px rgba(0, 242, 234, 0.2);
+        }
         .contactForm textarea {
             min-height: 150px;
             resize: vertical;
         }
-
-        .contactForm .submitButton {
+        .submitButton { /* Using homeCtaButton style for consistency but can be unique */
             align-self: flex-start; /* Align button to the start */
+            padding: 15px 35px;
+            background: var(--primaryAccentColor);
+            border: 2px solid var(--primaryAccentColor);
+            color: var(--bgColor);
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color var(--transitionSpeed) ease, color var(--transitionSpeed) ease, transform var(--transitionSpeed) ease;
+        }
+        .submitButton:hover {
+            background-color: var(--secondaryAccentColor);
+            border-color: var(--secondaryAccentColor);
+            color: var(--headingColor);
+            transform: translateY(-3px);
+        }
+
+        /* --- Admin & Login Views --- */
+        .viewContainer { /* Common container for login and admin panel */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background-color: var(--bgColor); /* Or a slightly different shade */
+        }
+        .authFormContainer {
+            background-color: var(--cardBgColor);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 450px; /* Control form width */
+            text-align: center;
+            border: 1px solid var(--borderColor);
+        }
+        .authFormContainer h2 {
+            color: var(--headingColor);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        .authFormContainer .formInput {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--borderColor);
+            background-color: var(--bgColor);
+            color: var(--textColor);
+            font-size: 1rem;
+        }
+        .authFormContainer .formInput:focus {
+            outline: none;
+            border-color: var(--primaryAccentColor);
+        }
+        .authFormContainer .formButton {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, var(--primaryAccentColor), var(--secondaryAccentColor));
+            color: var(--bgColor);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: opacity var(--transitionSpeed), transform var(--transitionSpeed);
+        }
+        .authFormContainer .formButton:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        .authFormError {
+            color: #ff6b6b; /* Light red for errors */
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        /* Admin Panel Specifics */
+        .adminPanelContainer { /* Extends viewContainer */
+            max-width: 1000px;
+            align-items: stretch; /* Allow sections to take full width */
+        }
+        .adminPanelContainer h2 { margin-bottom: 40px; }
+        .adminSection {
+            background-color: var(--cardBgColor);
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            border: 1px solid var(--borderColor);
+        }
+        .adminSection h3 {
+            color: var(--primaryAccentColor);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--borderColor);
+            padding-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        .adminForm label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--textColor);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .adminForm input[type="text"],
+        .adminForm input[type="date"], /* Not used but for consistency */
+        .adminForm textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--borderColor);
+            background-color: var(--bgColor);
+            color: var(--textColor);
+            font-family: var(--fontPrimary);
+            font-size: 1rem;
+        }
+        .adminForm textarea { min-height: 100px; resize: vertical; }
+        .adminForm .formActions { margin-top: 10px; }
+        .adminForm .formActions button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color var(--transitionSpeed), transform var(--transitionSpeed);
+        }
+        .adminForm .saveButton { background-color: var(--primaryAccentColor); color: var(--bgColor); }
+        .adminForm .cancelButton { background-color: #555; color: var(--textColor); }
+        .adminForm .saveButton:hover, .adminForm .cancelButton:hover { transform: translateY(-2px); }
+
+        .adminList { list-style: none; padding: 0; }
+        .adminListItem {
+            background-color: #2a2a2a; /* Slightly lighter than cardBg for items */
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #444;
+        }
+        .adminListItemContent strong { color: var(--primaryAccentColor); }
+        .adminListItemActions button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .editButton { background-color: #f0ad4e; color: var(--bgColor); } /* Orange */
+        .deleteButton { background-color: #d9534f; color: white; } /* Red */
+        .logoutButton { /* Style like formButton */
+            display: block;
+            margin: 30px auto 0;
+            padding: 12px 25px;
+            width: auto; /* Don't make it full width */
+            background: var(--secondaryAccentColor);
+            color: var(--headingColor);
         }
 
 
-        /* Scroll to Top Button */
+        /* --- Scroll to Top Button --- */
         .scrollTopButton {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background-color: var(--secondaryColor);
-            color: var(--primaryColor);
+            background-color: var(--primaryAccentColor);
+            color: var(--bgColor);
             border: none;
             border-radius: 50%;
             width: 50px;
@@ -448,328 +772,151 @@
             align-items: center;
             justify-content: center;
             z-index: 900;
-            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 242, 234, 0.3);
             transition: background-color var(--transitionSpeed) ease, opacity var(--transitionSpeed) ease, transform var(--transitionSpeed) ease;
         }
         .scrollTopButton:hover {
-            background-color: #52d3c0; /* Lighter aqua */
-            transform: translateY(-3px);
+            background-color: var(--secondaryAccentColor);
+            transform: translateY(-5px) scale(1.1);
         }
         .scrollTopButton.showScrollTop {
             display: flex;
         }
 
-        /* Admin Panel Styles */
-        .adminLoginOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .adminLoginForm {
-            background-color: var(--lightNavy);
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            width: 350px;
-            text-align: center;
-        }
-        .adminLoginForm h2 {
-            color: var(--lightestSlate);
-            margin-bottom: 20px;
-        }
-        .adminLoginForm input {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            border: 1px solid var(--lightestNavy);
-            background-color: var(--primaryColor);
-            color: var(--lightestSlate);
-        }
-        .adminLoginForm button {
-            padding: 12px 25px;
-            background-color: var(--secondaryColor);
-            color: var(--primaryColor);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color var(--transitionSpeed);
-        }
-        .adminLoginForm button:hover {
-            background-color: #52d3c0;
-        }
-        .adminLoginError {
-            color: #ff6b6b; /* Light red for errors */
-            margin-top: 10px;
-            font-size: 0.9rem;
-        }
-
-        .adminPanelContainer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--primaryColor);
-            z-index: 1999; /* Below login overlay if it's still there */
-            overflow-y: auto;
-            padding: 20px;
-            color: var(--lightestSlate);
-            display: none; /* Hidden by default */
-        }
-        .adminPanelContainer h2 {
-            color: var(--secondaryColor);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .adminSection {
-            background-color: var(--lightNavy);
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 8px;
-        }
-        .adminSection h3 {
-            color: var(--lightestSlate);
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--lightestNavy);
-            padding-bottom: 10px;
-        }
-        .adminForm label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--slate);
-        }
-        .adminForm input[type="text"],
-        .adminForm input[type="date"],
-        .adminForm textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            border: 1px solid var(--lightestNavy);
-            background-color: var(--primaryColor);
-            color: var(--lightestSlate);
-            font-family: var(--fontSans);
-        }
-        .adminForm textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        .adminForm .formActions button {
-            padding: 10px 20px;
-            margin-right: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .adminForm .saveButton {
-            background-color: var(--secondaryColor);
-            color: var(--primaryColor);
-        }
-        .adminForm .cancelButton {
-            background-color: var(--slate);
-            color: var(--primaryColor);
-        }
-
-        .adminList {
-            list-style: none;
-            padding: 0;
-        }
-        .adminListItem {
-            background-color: var(--lightestNavy);
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .adminListItemContent strong { color: var(--secondaryColor); }
-        .adminListItemActions button {
-            margin-left: 10px;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .editButton { background-color: #f0ad4e; color: white; } /* Orange */
-        .deleteButton { background-color: #d9534f; color: white; } /* Red */
-        .logoutButton {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: var(--secondaryColor);
-            color: var(--primaryColor);
-            border:none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* Utility classes */
+        /* --- Utility & Helper Classes --- */
         .hidden { display: none !important; }
+
+        /* --- Responsiveness --- */
+        @media (max-width: 992px) { /* Tablet and below */
+            .aboutSection .contentWrapper,
+            .contactSection .contentWrapper {
+                grid-template-columns: 1fr; /* Stack columns */
+            }
+            .aboutImageContainer { margin-top: 30px; }
+            .timeline::after { left: 30px; } /* Move timeline line to left */
+            .timelineItem { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timelineItem.right { left: 0%; } /* All items on right of line */
+            .timelineItem::after, .timelineItem.right::after {
+                left: 20px; /* Adjust circle position */
+            }
+        }
+
+        @media (max-width: 768px) { /* Mobile */
+            .mainNav { padding: 0 20px; }
+            .mainNav ul {
+                display: none; /* Hide regular nav links */
+                /* Further mobile menu implementation needed if toggle is enabled */
+            }
+            .menuToggle { display: block; } /* Show hamburger */
+
+            .sectionTitle { font-size: clamp(2rem, 6vw, 3rem); }
+            .sectionSubtitle { font-size: clamp(0.9rem, 3vw, 1.1rem); margin-bottom: 30px; }
+
+            .homeName { font-size: clamp(2.5rem, 10vw, 4.5rem); }
+            .homeTagline { font-size: clamp(1.2rem, 5vw, 2rem); }
+
+            .projectsGrid { grid-template-columns: 1fr; } /* Single column for projects */
+
+            .contactSection .contentWrapper { text-align: center; }
+            .contactDetailsList li { justify-content: center; }
+            .submitButton { align-self: center; }
+        }
 
     </style>
 </head>
 <body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="icon-link" viewBox="0 0 24 24">
+            <path d="M10.59 13.41c.44-.44.44-1.15 0-1.59l-2.83-2.83c-1.03-1.03-2.68-1.03-3.71 0-.51.51-.79 1.18-.79 1.9s.28 1.39.79 1.9l2.83 2.83c.22.22.51.33.79.33s.57-.11.79-.33c.44-.44.44-1.15 0-1.59l-1.41-1.41c-.2-.2-.2-.51 0-.71s.51-.2.71 0l1.41 1.41c.22.22.51.33.79.33s.57-.11.79-.33zm2.83-4.24c.44-.44 1.15-.44 1.59 0l2.83 2.83c1.03 1.03 1.03 2.68 0 3.71-.51.51-1.18.79-1.9.79s-1.39-.28-1.9-.79l-2.83-2.83c-.22-.22-.33-.51-.33-.79s.11-.57.33-.79c.44-.44 1.15-.44 1.59 0l1.41 1.41c.2.2.51.2.71 0s.2-.51 0-.71l-1.41-1.41c-.22-.22-.33-.51-.33-.79s.11-.57.33-.79z"/>
+        </symbol>
+        <symbol id="icon-github" viewBox="0 0 24 24">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        </symbol>
+         <symbol id="icon-email" viewBox="0 0 24 24">
+            <path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/>
+        </symbol>
+        <symbol id="icon-phone" viewBox="0 0 24 24">
+            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+        </symbol>
+        <symbol id="icon-menu" viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </symbol>
+        <symbol id="icon-close" viewBox="0 0 24 24">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </symbol>
+    </svg>
 
     <nav class="mainNav" id="mainNav">
+        <div class="logoContainer">
+            <a href="#homeSection">YourName<span class="dot">.</span></a>
+        </div>
         <ul>
             <li><a href="#homeSection" class="navLink">Home</a></li>
             <li><a href="#aboutSection" class="navLink">About</a></li>
             <li><a href="#experiencesSection" class="navLink">Experience</a></li>
             <li><a href="#projectsSection" class="navLink">Projects</a></li>
             <li><a href="#contactSection" class="navLink">Contact</a></li>
-            <li><a href="#" id="adminLoginLink">Admin</a></li>
-        </ul>
+            </ul>
+        <button class="menuToggle" id="menuToggle" aria-label="Open navigation menu">
+            <svg class="icon"><use xlink:href="#icon-menu"></use></svg>
+        </button>
     </nav>
 
-    <div id="adminLoginOverlay" class="adminLoginOverlay hidden">
-        <div class="adminLoginForm">
-            <h2>Admin Login</h2>
-            <input type="text" id="username" placeholder="Username (admin)" autocomplete="username">
-            <input type="password" id="password" placeholder="Password (admin)" autocomplete="current-password">
-            <button id="loginButton">Login</button>
-            <p id="loginError" class="adminLoginError hidden">Invalid credentials.</p>
-        </div>
-    </div>
-
-    <div id="adminPanel" class="adminPanelContainer">
-        <h2>Admin Panel</h2>
-        <button id="logoutButton" class="logoutButton">Logout</button>
-
-        <section class="adminSection">
-            <h3>Manage Experiences</h3>
-            <form id="experienceForm" class="adminForm">
-                <input type="hidden" id="experienceId">
-                <div>
-                    <label for="experienceTitle">Job Title:</label>
-                    <input type="text" id="experienceTitle" required>
-                </div>
-                <div>
-                    <label for="experienceCompany">Company:</label>
-                    <input type="text" id="experienceCompany" required>
-                </div>
-                <div>
-                    <label for="experienceDate">Date Range (e.g., Jan 2020 - Present):</label>
-                    <input type="text" id="experienceDate" required>
-                </div>
-                <div>
-                    <label for="experienceDescription">Description (comma-separated points):</label>
-                    <textarea id="experienceDescription" required></textarea>
-                </div>
-                <div class="formActions">
-                    <button type="submit" class="saveButton">Save Experience</button>
-                    <button type="button" id="cancelExperienceEdit" class="cancelButton hidden">Cancel Edit</button>
-                </div>
-            </form>
-            <ul id="experienceListAdmin" class="adminList">
-                </ul>
-        </section>
-
-        <section class="adminSection">
-            <h3>Manage Projects</h3>
-            <form id="projectForm" class="adminForm">
-                <input type="hidden" id="projectId">
-                <div>
-                    <label for="projectTitle">Project Name:</label>
-                    <input type="text" id="projectTitle" required>
-                </div>
-                <div>
-                    <label for="projectDescription">Description:</label>
-                    <textarea id="projectDescription" required></textarea>
-                </div>
-                <div>
-                    <label for="projectImage">Image URL (optional):</label>
-                    <input type="text" id="projectImage" placeholder="https://example.com/image.jpg">
-                </div>
-                <div>
-                    <label for="projectTech">Technologies (comma-separated):</label>
-                    <input type="text" id="projectTech" required>
-                </div>
-                <div>
-                    <label for="projectLink">Live Link (optional):</label>
-                    <input type="text" id="projectLink">
-                </div>
-                <div>
-                    <label for="projectRepo">Repo Link (optional):</label>
-                    <input type="text" id="projectRepo">
-                </div>
-                <div class="formActions">
-                    <button type="submit" class="saveButton">Save Project</button>
-                    <button type="button" id="cancelProjectEdit" class="cancelButton hidden">Cancel Edit</button>
-                </div>
-            </form>
-            <ul id="projectListAdmin" class="adminList">
-                </ul>
-        </section>
-    </div>
-
-    <main id="portfolioContent">
+    <div id="mainContentContainer">
         <section id="homeSection" class="pageSection">
-            <div class="contentWrapper">
-                <p style="color: var(--secondaryColor); font-family: var(--fontMono); margin-bottom: 20px;">Hi, my name is</p>
-                <h1 class="heroName">Your Name.</h1>
-                <h2 class="subHeading">I build things for the web.</h2>
-                <p class="introParagraph">
-                    I'm a frontend developer specializing in crafting exceptional digital experiences.
-                    Currently, I’m focused on building accessible, human-centered products and
-                    pushing the boundaries of web technology.
+            <div class="homeContent">
+                <p class="homeGreeting">Hello, my name is</p>
+                <h1 class="homeName">Your Name</h1>
+                <h2 class="homeTagline">I craft digital experiences.</h2>
+                <p class="homeBio">
+                    I'm a frontend developer passionate about building beautiful, interactive, and accessible web applications.
+                    I turn ideas into reality with clean code and an eye for detail.
                 </p>
-                <a href="#projectsSection" class="ctaButton">Check out my work!</a>
+                <a href="#projectsSection" class="homeCtaButton">View My Work</a>
             </div>
         </section>
 
         <section id="aboutSection" class="pageSection">
             <div class="contentWrapper">
-                <div class="aboutText">
+                <div class="aboutTextContent">
                     <h2 class="sectionTitle">About Me</h2>
                     <p>
-                        Hello! I'm [Your Name], a passionate frontend developer with a knack for creating intuitive, dynamic, and user-friendly web applications. My journey into web development started with a fascination for how websites could blend art and technology.
+                        I'm a creative and results-oriented Frontend Developer with a strong foundation in modern web technologies. My passion lies in translating complex requirements into intuitive and engaging user interfaces. I believe that great design is not just about aesthetics, but also about functionality and user experience.
                     </p>
                     <p>
-                        I thrive on transforming complex problems into elegant solutions and continuously seek to learn and adapt to the ever-evolving landscape of web technologies. When I'm not coding, you might find me exploring new design trends, contributing to open-source projects, or [mention a hobby].
+                        Beyond coding, I enjoy exploring new design trends, contributing to open-source, and <span class="highlight">[mention another hobby or passion]</span>. I'm always eager to learn and take on new challenges.
                     </p>
-                    <p>Here are a few technologies I’ve been working with recently:</p>
-                    <ul class="skillsList">
-                        <li>JavaScript (ES6+)</li>
-                        <li>React</li>
-                        <li>Vue.js</li>
-                        <li>HTML5 & CSS3</li>
-                        <li>Sass/SCSS</li>
-                        <li>Node.js</li>
-                        {/* Add more skills */}
-                    </ul>
+                    <p>Key technologies I work with:</p>
+                    <div class="skillsGrid">
+                        <span class="skillItem">HTML5</span>
+                        <span class="skillItem">CSS3 & SASS</span>
+                        <span class="skillItem">JavaScript (ESNext)</span>
+                        <span class="skillItem">React</span>
+                        <span class="skillItem">Vue.js</span>
+                        <span class="skillItem">Node.js</span>
+                        <span class="skillItem">Git & GitHub</span>
+                        <span class="skillItem">Responsive Design</span>
+                    </div>
                 </div>
                 <div class="aboutImageContainer">
-                    <img src="https://via.placeholder.com/300x300.png?text=Your+Photo" alt="Your Name - Frontend Developer">
-                    {/* Replace with your actual photo */}
+                    <img src="https://via.placeholder.com/400x500.png?text=Your+Portrait" alt="Your Name - Professional Portrait">
                 </div>
             </div>
         </section>
 
         <section id="experiencesSection" class="pageSection">
-            <h2 class="sectionTitle">Where I've Worked</h2>
-            <p class="sectionSubtitle">My professional journey so far.</p>
+            <h2 class="sectionTitle">My Journey</h2>
+            <p class="sectionSubtitle">A timeline of my professional experience and growth.</p>
             <div class="contentWrapper">
-                <div id="experiencesGrid" class="experiencesGrid">
+                <div class="timeline" id="experiencesTimeline">
                     <p>Loading experiences...</p>
                 </div>
             </div>
         </section>
 
         <section id="projectsSection" class="pageSection">
-            <h2 class="sectionTitle">Things I've Built</h2>
-            <p class="sectionSubtitle">A selection of my recent projects.</p>
+            <h2 class="sectionTitle">Selected Works</h2>
+            <p class="sectionSubtitle">Here are some of the projects I'm proud to have worked on.</p>
             <div class="contentWrapper">
                 <div id="projectsGrid" class="projectsGrid">
                     <p>Loading projects...</p>
@@ -778,21 +925,81 @@
         </section>
 
         <section id="contactSection" class="pageSection">
-            <h2 class="sectionTitle">Get In Touch</h2>
-            <p class="sectionSubtitle">I'm currently open to new opportunities. My inbox is always open!</p>
+             <h2 class="sectionTitle">Let's Connect</h2>
+             <p class="sectionSubtitle">Have a project in mind or just want to say hi? Feel free to reach out!</p>
             <div class="contentWrapper">
+                <div class="contactInfo">
+                    <p>I'm always open to discussing new projects, creative ideas, or opportunities to be part of something amazing. My inbox is always open. If you prefer, you can also reach me through these channels:</p>
+                    <ul class="contactDetailsList">
+                        <li>
+                            <svg class="icon"><use xlink:href="#icon-email"></use></svg>
+                            <a href="mailto:your.email@example.com">your.email@example.com</a>
+                        </li>
+                        <li>
+                            <svg class="icon"><use xlink:href="#icon-phone"></use></svg>
+                            <span>+1 (234) 567-8900 (Optional)</span>
+                        </li>
+                        </ul>
+                </div>
                 <form id="contactForm" class="contactForm" action="mailto:your.email@example.com" method="post" enctype="text/plain">
                     <input type="text" name="name" placeholder="Your Name" required>
                     <input type="email" name="email" placeholder="Your Email" required>
                     <textarea name="message" placeholder="Your Message" required></textarea>
-                    <button type="submit" class="ctaButton submitButton">Send Message</button>
+                    <button type="submit" class="submitButton">Send Message</button>
                 </form>
-                <p style="margin-top: 30px; font-size: 0.9rem;">
-                    Alternatively, you can reach out via <a href="mailto:your.email@example.com" style="color: var(--secondaryColor);">your.email@example.com</a>.
-                </p>
             </div>
         </section>
-    </main>
+    </div>
+
+    <div id="loginView" class="viewContainer hidden">
+        <div class="authFormContainer">
+            <h2>Admin Login</h2>
+            <input type="text" id="username" class="formInput" placeholder="Username (admin)" autocomplete="username">
+            <input type="password" id="password" class="formInput" placeholder="Password (admin)" autocomplete="current-password">
+            <button id="loginButton" class="formButton">Login</button>
+            <p id="loginError" class="authFormError hidden">Invalid credentials.</p>
+            <p style="margin-top: 20px; font-size: 0.9em;"><a href="#" onclick="navigateToMainPage(); return false;" style="color: var(--primaryAccentColor);">Back to Portfolio</a></p>
+        </div>
+    </div>
+
+    <div id="adminView" class="viewContainer adminPanelContainer hidden">
+        <h2>Admin Panel</h2>
+        <button id="logoutButton" class="formButton logoutButton">Logout & View Portfolio</button>
+
+        <section class="adminSection">
+            <h3>Manage Experiences</h3>
+            <form id="experienceForm" class="adminForm">
+                <input type="hidden" id="experienceId">
+                <div><label for="experienceTitle">Job Title:</label><input type="text" id="experienceTitle" required></div>
+                <div><label for="experienceCompany">Company:</label><input type="text" id="experienceCompany" required></div>
+                <div><label for="experienceDate">Date Range (e.g., Jan 2020 - Present):</label><input type="text" id="experienceDate" required></div>
+                <div><label for="experienceDescription">Description (comma-separated points):</label><textarea id="experienceDescription" required></textarea></div>
+                <div class="formActions">
+                    <button type="submit" class="saveButton">Save Experience</button>
+                    <button type="button" id="cancelExperienceEdit" class="cancelButton hidden">Cancel Edit</button>
+                </div>
+            </form>
+            <ul id="experienceListAdmin" class="adminList"></ul>
+        </section>
+
+        <section class="adminSection">
+            <h3>Manage Projects</h3>
+            <form id="projectForm" class="adminForm">
+                <input type="hidden" id="projectId">
+                <div><label for="projectTitle">Project Name:</label><input type="text" id="projectTitle" required></div>
+                <div><label for="projectDescription">Description:</label><textarea id="projectDescription" required></textarea></div>
+                <div><label for="projectImage">Image URL (optional):</label><input type="text" id="projectImage" placeholder="https://example.com/image.jpg"></div>
+                <div><label for="projectTech">Technologies (comma-separated):</label><input type="text" id="projectTech" required></div>
+                <div><label for="projectLink">Live Link (optional):</label><input type="text" id="projectLink"></div>
+                <div><label for="projectRepo">Repo Link (optional):</label><input type="text" id="projectRepo"></div>
+                <div class="formActions">
+                    <button type="submit" class="saveButton">Save Project</button>
+                    <button type="button" id="cancelProjectEdit" class="cancelButton hidden">Cancel Edit</button>
+                </div>
+            </form>
+            <ul id="projectListAdmin" class="adminList"></ul>
+        </section>
+    </div>
 
     <button id="scrollTopBtn" class="scrollTopButton">▲</button>
 
@@ -804,26 +1011,30 @@
         let currentEditingExperienceId = null;
         let currentEditingProjectId = null;
 
-        let experiences = JSON.parse(localStorage.getItem('experiences')) || [
-            { id: 'exp1', title: 'Senior Frontend Developer', company: 'Tech Solutions Inc.', date: 'Jan 2022 - Present', description: 'Led development of responsive UIs,Mentored junior developers,Improved code quality and performance metrics' },
-            { id: 'exp2', title: 'Frontend Developer', company: 'Web Wizards LLC', date: 'Jun 2019 - Dec 2021', description: 'Developed and maintained client websites,Collaborated with backend team,Implemented new features using React and Vue' }
+        // --- Initial Data (Defaults if sessionStorage is empty) ---
+        const defaultExperiences = [
+            { id: 'exp1', title: 'Lead Frontend Architect', company: 'Innovatech Solutions', date: 'Mar 2022 - Present', description: 'Spearheaded UI/UX strategy for flagship products,Mentored a team of 5 developers,Reduced page load times by 30% through performance optimization,Implemented advanced animation libraries for enhanced user engagement' },
+            { id: 'exp2', title: 'Senior Frontend Engineer', company: 'Digital Creations Co.', date: 'Jul 2019 - Feb 2022', description: 'Developed complex user interfaces for SaaS applications,Collaborated with backend teams to integrate APIs,Championed responsive design principles across all projects,Contributed to a component library used company-wide' }
         ];
-        let projects = JSON.parse(localStorage.getItem('projects')) || [
-            { id: 'proj1', title: 'E-commerce Platform', description: 'A full-featured e-commerce website with a modern UI, product listings, cart functionality, and user accounts.', image: 'https://via.placeholder.com/400x250.png?text=Project+Alpha', tech: 'React,Node.js,MongoDB,Stripe', link: '#', repo: '#' },
-            { id: 'proj2', title: 'Portfolio Website Template', description: 'A sleek and customizable portfolio template for creatives and developers. Built with vanilla JS for performance.', image: 'https://via.placeholder.com/400x250.png?text=Project+Beta', tech: 'HTML,CSS,JavaScript', link: '#', repo: '#' },
-            { id: 'proj3', title: 'Task Management App', description: 'A Kanban-style task management application to help users organize their daily tasks and projects efficiently.', image: 'https://via.placeholder.com/400x250.png?text=Project+Gamma', tech: 'Vue.js,Firebase,Vuetify', link: '#', repo: '#' }
+        const defaultProjects = [
+            { id: 'proj1', title: 'Project Nova - Interactive Dashboard', description: 'A dynamic data visualization dashboard with real-time updates and customizable widgets. Built for high performance and scalability.', image: 'https://via.placeholder.com/400x250.png?text=Project+Nova', tech: 'React,D3.js,Node.js,WebSocket', link: '#', repo: '#' },
+            { id: 'proj2', title: 'Artisan E-commerce Platform', description: 'A beautifully designed e-commerce site for handcrafted goods, featuring advanced filtering, secure checkout, and a unique visual identity.', image: 'https://via.placeholder.com/400x250.png?text=Artisan+Shop', tech: 'Vue.js,Nuxt.js,Stripe,Firebase', link: '#', repo: '#' },
+            { id: 'proj3', title: 'ConnectSphere Social App', description: 'A mobile-first social networking application focusing on local community engagement and event discovery.', image: 'https://via.placeholder.com/400x250.png?text=ConnectSphere', tech: 'React Native,GraphQL,AWS Amplify', link: '#', repo: '#' }
         ];
 
+        let experiences = JSON.parse(sessionStorage.getItem('experiences')) || defaultExperiences;
+        let projects = JSON.parse(sessionStorage.getItem('projects')) || defaultProjects;
+
         // --- DOM Elements ---
-        const adminLoginLink = document.getElementById('adminLoginLink');
-        const adminLoginOverlay = document.getElementById('adminLoginOverlay');
+        const mainContentContainer = document.getElementById('mainContentContainer');
+        const loginView = document.getElementById('loginView');
+        const adminView = document.getElementById('adminView');
+
         const loginButton = document.getElementById('loginButton');
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
         const loginError = document.getElementById('loginError');
-        const adminPanel = document.getElementById('adminPanel');
         const logoutButton = document.getElementById('logoutButton');
-        const portfolioContent = document.getElementById('portfolioContent');
 
         const experienceForm = document.getElementById('experienceForm');
         const experienceIdInput = document.getElementById('experienceId');
@@ -833,7 +1044,7 @@
         const experienceDescriptionInput = document.getElementById('experienceDescription');
         const cancelExperienceEditBtn = document.getElementById('cancelExperienceEdit');
         const experienceListAdmin = document.getElementById('experienceListAdmin');
-        const experiencesGrid = document.getElementById('experiencesGrid');
+        const experiencesTimeline = document.getElementById('experiencesTimeline');
 
         const projectForm = document.getElementById('projectForm');
         const projectIdInput = document.getElementById('projectId');
@@ -850,44 +1061,107 @@
         const scrollTopBtn = document.getElementById('scrollTopBtn');
         const mainNav = document.getElementById('mainNav');
         const navLinks = document.querySelectorAll('.navLink');
-        const pageSections = document.querySelectorAll('.pageSection');
+        const pageSections = document.querySelectorAll('#mainContentContainer .pageSection'); // Target sections within main content
 
-        // --- Parallax Scrolling & Section Activation ---
+        // --- Client-Side Routing & View Management ---
+        function updateView(hash) {
+            mainContentContainer.classList.add('hidden');
+            loginView.classList.add('hidden');
+            adminView.classList.add('hidden');
+            mainNav.style.display = 'flex'; // Default for portfolio
+
+            if (hash === '#login') {
+                loginView.classList.remove('hidden');
+                mainNav.style.display = 'none';
+            } else if (hash === '#admin') {
+                if (sessionStorage.getItem('isAdminLoggedIn') === 'true') {
+                    adminView.classList.remove('hidden');
+                    mainNav.style.display = 'none';
+                    loadAdminData();
+                } else {
+                    window.location.hash = '#login'; // Redirect to login
+                }
+            } else { // Main portfolio sections
+                mainContentContainer.classList.remove('hidden');
+                // If hash is a section ID, try to scroll to it.
+                // The activateInitialSection will handle visibility and scroll.
+                activateInitialSection(hash);
+            }
+        }
+
+        function handleHashChange() {
+            updateView(window.location.hash);
+        }
+
+        window.navigateToMainPage = function() { // Make it globally accessible for the inline onclick
+             window.location.hash = '#homeSection'; // Or just empty hash
+        }
+
+
+        // --- Authentication ---
+        loginButton.addEventListener('click', () => {
+            if (usernameInput.value === ADMIN_USER && passwordInput.value === ADMIN_PASS) {
+                sessionStorage.setItem('isAdminLoggedIn', 'true');
+                loginError.classList.add('hidden');
+                usernameInput.value = '';
+                passwordInput.value = '';
+                window.location.hash = '#admin';
+            } else {
+                loginError.textContent = 'Invalid credentials. Please try again.';
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        logoutButton.addEventListener('click', () => {
+            sessionStorage.removeItem('isAdminLoggedIn');
+            window.location.hash = '#homeSection'; // Or desired landing page
+        });
+
+        // --- Scroll Effects & Section Activation ---
         let lastScrollTop = 0;
         function handleScroll() {
-            // Navbar hide/show
             let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            if (scrollTop > lastScrollTop && scrollTop > mainNav.offsetHeight) {
-                mainNav.classList.add('navHidden'); // Hide on scroll down
+
+            // Navbar style/hide on scroll
+            if (scrollTop > 50) {
+                mainNav.classList.add('navScrolled');
             } else {
-                mainNav.classList.remove('navHidden'); // Show on scroll up or at top
+                mainNav.classList.remove('navScrolled');
             }
-            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+            if (scrollTop > lastScrollTop && scrollTop > mainNav.offsetHeight && window.location.hash !== '#login' && window.location.hash !== '#admin') {
+                mainNav.classList.add('navHidden');
+            } else {
+                mainNav.classList.remove('navHidden');
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
 
             // Scroll to top button
-            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
                 scrollTopBtn.classList.add('showScrollTop');
             } else {
                 scrollTopBtn.classList.remove('showScrollTop');
             }
 
-            // Section activation and nav link highlighting
+            // Section activation and nav link highlighting (only for main content)
+            if (!loginView.classList.contains('hidden') || !adminView.classList.contains('hidden')) {
+                return; // Don't run for admin/login views
+            }
+
             let currentSectionId = '';
+            const navOffset = mainNav.offsetHeight + 20; // Extra offset for better trigger
+
             pageSections.forEach(section => {
-                const sectionTop = section.offsetTop - mainNav.offsetHeight - 100; // Adjust offset as needed
+                const sectionTop = section.offsetTop - navOffset;
                 const sectionBottom = sectionTop + section.offsetHeight;
 
                 if (scrollTop >= sectionTop && scrollTop < sectionBottom) {
                     currentSectionId = section.id;
-                    section.classList.add('isActive'); // For entry animation
-
-                    // Parallax-like z-index management: higher sections (earlier in DOM) get higher z-index
-                    // This part is tricky for the "slide over" effect without more complex JS.
-                    // The CSS z-index already defines a base stack.
-                    // We can enhance by dynamically adjusting z-index if needed, but for now,
-                    // CSS handles the static stacking, and JS `isActive` handles fade-in.
+                    if (!section.classList.contains('isActive')) {
+                         section.classList.add('isActive'); // For entry animation
+                    }
                 } else {
-                    // section.classList.remove('isActive'); // Optional: remove if you want re-animation on scroll back
+                    // Optional: remove isActive if you want sections to animate out or re-animate on scroll back
+                    // section.classList.remove('isActive');
                 }
             });
 
@@ -899,336 +1173,227 @@
             });
         }
 
-        // Initial check for section activation (e.g., if page loads on a hash)
-        function activateInitialSection() {
-            const hash = window.location.hash;
-            if (hash) {
-                const targetSection = document.querySelector(hash);
-                if (targetSection) {
-                    targetSection.classList.add('isActive');
-                     // Also highlight nav link
-                    navLinks.forEach(link => {
-                        if (link.getAttribute('href') === hash) {
-                            link.classList.add('activeSectionLink');
-                        }
-                    });
-                } else {
-                     pageSections[0]?.classList.add('isActive'); // Activate first section by default
-                     navLinks[0]?.classList.add('activeSectionLink');
+        function activateInitialSection(targetHash = window.location.hash) {
+            // If no hash or hash is for admin/login, activate first portfolio section
+            const isPortfolioView = !targetHash || (targetHash !== '#login' && targetHash !== '#admin');
+
+            if (isPortfolioView) {
+                let sectionToActivate = pageSections[0]; // Default to first section
+                let linkToActivate = navLinks[0];
+
+                if (targetHash && targetHash !== '#') {
+                    const targetSection = document.querySelector(targetHash);
+                    if (targetSection && Array.from(pageSections).includes(targetSection)) {
+                        sectionToActivate = targetSection;
+                        linkToActivate = document.querySelector(`.navLink[href="${targetHash}"]`);
+                    }
                 }
-            } else {
-                 pageSections[0]?.classList.add('isActive'); // Activate first section by default
-                 navLinks[0]?.classList.add('activeSectionLink');
+
+                if (sectionToActivate) {
+                    // Ensure other sections are not active if we are scrolling to a specific one
+                    pageSections.forEach(s => s.classList.remove('isActive'));
+                    sectionToActivate.classList.add('isActive');
+                     // Scroll to the section, respecting navbar height
+                    const navHeight = mainNav.offsetHeight;
+                    const targetPosition = sectionToActivate.offsetTop - navHeight + 1;
+                    // Check if not already at top to avoid initial scroll jump if hash is #homeSection
+                    if (window.pageYOffset !== targetPosition && targetHash !== '#homeSection' && targetHash !== '' && targetHash !== '#') {
+                         setTimeout(() => window.scrollTo({ top: targetPosition, behavior: 'smooth' }), 0);
+                    } else if (targetHash === '#homeSection' || targetHash === '' || targetHash === '#') {
+                        // For home, ensure it's scrolled to top without smooth scroll jump if already there
+                        if (window.pageYOffset !== 0) window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+
+
+                }
+                 navLinks.forEach(lnk => lnk.classList.remove('activeSectionLink'));
+                if(linkToActivate) linkToActivate.classList.add('activeSectionLink');
+
             }
             handleScroll(); // Run once to set initial states
         }
 
 
-        // --- Admin Panel Logic ---
-        function showAdminLogin() {
-            adminLoginOverlay.classList.remove('hidden');
-            usernameInput.focus();
-        }
-
-        function hideAdminLogin() {
-            adminLoginOverlay.classList.add('hidden');
-            loginError.classList.add('hidden');
-            usernameInput.value = '';
-            passwordInput.value = '';
-        }
-
-        function showAdminPanel() {
-            adminPanel.style.display = 'block';
-            portfolioContent.style.display = 'none'; /* Hide main content */
-            mainNav.style.display = 'none'; /* Hide nav */
-            document.body.style.overflow = 'hidden'; /* Prevent main page scroll */
-            loadAdminData();
-        }
-
-        function hideAdminPanel() {
-            adminPanel.style.display = 'none';
-            portfolioContent.style.display = 'block'; /* Show main content */
-            mainNav.style.display = 'flex'; /* Show nav */
-            document.body.style.overflow = 'auto'; /* Restore scroll */
-            loadPublicExperiences(); // Refresh public content
-            loadPublicProjects();
-        }
-
-        adminLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            showAdminLogin();
-        });
-
-        loginButton.addEventListener('click', () => {
-            if (usernameInput.value === ADMIN_USER && passwordInput.value === ADMIN_PASS) {
-                hideAdminLogin();
-                showAdminPanel();
-            } else {
-                loginError.classList.remove('hidden');
-            }
-        });
-
-        logoutButton.addEventListener('click', () => {
-            hideAdminPanel();
-        });
-
-        // Close login modal if clicked outside the form
-        adminLoginOverlay.addEventListener('click', (e) => {
-            if (e.target === adminLoginOverlay) {
-                hideAdminLogin();
-            }
-        });
-
-
-        // --- Data Persistence ---
-        function saveExperiences() {
-            localStorage.setItem('experiences', JSON.stringify(experiences));
-        }
-        function saveProjects() {
-            localStorage.setItem('projects', JSON.stringify(projects));
-        }
+        // --- Data Persistence (Using sessionStorage) ---
+        function saveExperiences() { sessionStorage.setItem('experiences', JSON.stringify(experiences)); }
+        function saveProjects() { sessionStorage.setItem('projects', JSON.stringify(projects)); }
 
         // --- Experience Management (Admin) ---
         experienceForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const newExperience = {
                 id: currentEditingExperienceId || `exp${Date.now()}`,
-                title: experienceTitleInput.value,
-                company: experienceCompanyInput.value,
-                date: experienceDateInput.value,
-                description: experienceDescriptionInput.value
+                title: experienceTitleInput.value, company: experienceCompanyInput.value,
+                date: experienceDateInput.value, description: experienceDescriptionInput.value
             };
-
-            if (currentEditingExperienceId) {
-                experiences = experiences.map(exp => exp.id === currentEditingExperienceId ? newExperience : exp);
-            } else {
-                experiences.push(newExperience);
-            }
-            saveExperiences();
-            resetExperienceForm();
-            loadAdminExperiences();
+            if (currentEditingExperienceId) experiences = experiences.map(exp => exp.id === currentEditingExperienceId ? newExperience : exp);
+            else experiences.push(newExperience);
+            saveExperiences(); resetExperienceForm(); loadAdminExperiences();
         });
-
         cancelExperienceEditBtn.addEventListener('click', resetExperienceForm);
-
         function resetExperienceForm() {
-            experienceForm.reset();
-            experienceIdInput.value = '';
-            currentEditingExperienceId = null;
+            experienceForm.reset(); experienceIdInput.value = ''; currentEditingExperienceId = null;
             cancelExperienceEditBtn.classList.add('hidden');
         }
-
         function loadAdminExperiences() {
             experienceListAdmin.innerHTML = '';
             experiences.forEach(exp => {
-                const li = document.createElement('li');
-                li.classList.add('adminListItem');
-                li.innerHTML = `
-                    <div class="adminListItemContent">
-                        <strong>${exp.title}</strong> at ${exp.company} (${exp.date})
-                    </div>
-                    <div class="adminListItemActions">
-                        <button class="editButton" data-id="${exp.id}">Edit</button>
-                        <button class="deleteButton" data-id="${exp.id}">Delete</button>
-                    </div>
-                `;
+                const li = document.createElement('li'); li.classList.add('adminListItem');
+                li.innerHTML = `<div class="adminListItemContent"><strong>${exp.title}</strong> at ${exp.company}</div>
+                                <div class="adminListItemActions">
+                                    <button class="editButton" data-id="${exp.id}">Edit</button>
+                                    <button class="deleteButton" data-id="${exp.id}">Delete</button></div>`;
                 experienceListAdmin.appendChild(li);
             });
         }
-
         experienceListAdmin.addEventListener('click', (e) => {
             if (e.target.classList.contains('editButton')) {
-                const id = e.target.dataset.id;
-                const expToEdit = experiences.find(exp => exp.id === id);
+                const id = e.target.dataset.id; const expToEdit = experiences.find(exp => exp.id === id);
                 if (expToEdit) {
-                    experienceIdInput.value = expToEdit.id;
-                    experienceTitleInput.value = expToEdit.title;
-                    experienceCompanyInput.value = expToEdit.company;
-                    experienceDateInput.value = expToEdit.date;
-                    experienceDescriptionInput.value = expToEdit.description;
-                    currentEditingExperienceId = id;
-                    cancelExperienceEditBtn.classList.remove('hidden');
-                    experienceTitleInput.focus();
+                    experienceIdInput.value = expToEdit.id; experienceTitleInput.value = expToEdit.title;
+                    experienceCompanyInput.value = expToEdit.company; experienceDateInput.value = expToEdit.date;
+                    experienceDescriptionInput.value = expToEdit.description; currentEditingExperienceId = id;
+                    cancelExperienceEditBtn.classList.remove('hidden'); experienceTitleInput.focus();
                 }
             } else if (e.target.classList.contains('deleteButton')) {
-                if (confirm('Are you sure you want to delete this experience?')) {
-                    const id = e.target.dataset.id;
-                    experiences = experiences.filter(exp => exp.id !== id);
-                    saveExperiences();
-                    loadAdminExperiences();
+                if (confirm('Delete this experience?')) {
+                    experiences = experiences.filter(exp => exp.id !== e.target.dataset.id);
+                    saveExperiences(); loadAdminExperiences();
                 }
             }
         });
 
-        // --- Project Management (Admin) ---
+        // --- Project Management (Admin) --- (Similar structure to experiences)
         projectForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const newProject = {
-                id: currentEditingProjectId || `proj${Date.now()}`,
-                title: projectTitleInput.value,
-                description: projectDescriptionInput.value,
-                image: projectImageInput.value,
-                tech: projectTechInput.value,
-                link: projectLinkInput.value,
-                repo: projectRepoInput.value
+                id: currentEditingProjectId || `proj${Date.now()}`, title: projectTitleInput.value,
+                description: projectDescriptionInput.value, image: projectImageInput.value,
+                tech: projectTechInput.value, link: projectLinkInput.value, repo: projectRepoInput.value
             };
-
-            if (currentEditingProjectId) {
-                projects = projects.map(proj => proj.id === currentEditingProjectId ? newProject : proj);
-            } else {
-                projects.push(newProject);
-            }
-            saveProjects();
-            resetProjectForm();
-            loadAdminProjects();
+            if (currentEditingProjectId) projects = projects.map(p => p.id === currentEditingProjectId ? newProject : p);
+            else projects.push(newProject);
+            saveProjects(); resetProjectForm(); loadAdminProjects();
         });
-
         cancelProjectEditBtn.addEventListener('click', resetProjectForm);
-
         function resetProjectForm() {
-            projectForm.reset();
-            projectIdInput.value = '';
-            currentEditingProjectId = null;
+            projectForm.reset(); projectIdInput.value = ''; currentEditingProjectId = null;
             cancelProjectEditBtn.classList.add('hidden');
         }
-
         function loadAdminProjects() {
             projectListAdmin.innerHTML = '';
             projects.forEach(proj => {
-                const li = document.createElement('li');
-                li.classList.add('adminListItem');
-                li.innerHTML = `
-                    <div class="adminListItemContent">
-                        <strong>${proj.title}</strong>
-                    </div>
-                    <div class="adminListItemActions">
-                        <button class="editButton" data-id="${proj.id}">Edit</button>
-                        <button class="deleteButton" data-id="${proj.id}">Delete</button>
-                    </div>
-                `;
+                const li = document.createElement('li'); li.classList.add('adminListItem');
+                li.innerHTML = `<div class="adminListItemContent"><strong>${proj.title}</strong></div>
+                                <div class="adminListItemActions">
+                                    <button class="editButton" data-id="${proj.id}">Edit</button>
+                                    <button class="deleteButton" data-id="${proj.id}">Delete</button></div>`;
                 projectListAdmin.appendChild(li);
             });
         }
-
         projectListAdmin.addEventListener('click', (e) => {
             if (e.target.classList.contains('editButton')) {
-                const id = e.target.dataset.id;
-                const projToEdit = projects.find(proj => proj.id === id);
+                const id = e.target.dataset.id; const projToEdit = projects.find(p => p.id === id);
                 if (projToEdit) {
-                    projectIdInput.value = projToEdit.id;
-                    projectTitleInput.value = projToEdit.title;
-                    projectDescriptionInput.value = projToEdit.description;
-                    projectImageInput.value = projToEdit.image || '';
-                    projectTechInput.value = projToEdit.tech;
-                    projectLinkInput.value = projToEdit.link || '';
-                    projectRepoInput.value = projToEdit.repo || '';
-                    currentEditingProjectId = id;
-                    cancelProjectEditBtn.classList.remove('hidden');
-                    projectTitleInput.focus();
+                    projectIdInput.value = projToEdit.id; projectTitleInput.value = projToEdit.title;
+                    projectDescriptionInput.value = projToEdit.description; projectImageInput.value = projToEdit.image || '';
+                    projectTechInput.value = projToEdit.tech; projectLinkInput.value = projToEdit.link || '';
+                    projectRepoInput.value = projToEdit.repo || ''; currentEditingProjectId = id;
+                    cancelProjectEditBtn.classList.remove('hidden'); projectTitleInput.focus();
                 }
             } else if (e.target.classList.contains('deleteButton')) {
-                if (confirm('Are you sure you want to delete this project?')) {
-                    const id = e.target.dataset.id;
-                    projects = projects.filter(proj => proj.id !== id);
-                    saveProjects();
-                    loadAdminProjects();
+                if (confirm('Delete this project?')) {
+                    projects = projects.filter(p => p.id !== e.target.dataset.id);
+                    saveProjects(); loadAdminProjects();
                 }
             }
         });
 
-        function loadAdminData() {
-            loadAdminExperiences();
-            loadAdminProjects();
-        }
+        function loadAdminData() { loadAdminExperiences(); loadAdminProjects(); }
 
         // --- Public Content Display ---
         function loadPublicExperiences() {
-            experiencesGrid.innerHTML = '';
+            experiencesTimeline.innerHTML = '';
             if (experiences.length === 0) {
-                experiencesGrid.innerHTML = '<p>No professional experiences listed yet. Check back soon!</p>';
-                return;
+                experiencesTimeline.innerHTML = '<p style="text-align:center;">No experiences listed yet.</p>'; return;
             }
-            experiences.forEach(exp => {
+            experiences.forEach((exp, index) => {
                 const item = document.createElement('div');
-                item.classList.add('experienceItem');
-                let descriptionPoints = exp.description.split(',').map(point => `<li>${point.trim()}</li>`).join('');
+                item.classList.add('timelineItem', index % 2 === 0 ? 'left' : 'right');
+                const descriptionPoints = exp.description.split(',').map(point => `<li>${point.trim()}</li>`).join('');
                 item.innerHTML = `
-                    <h3>${exp.title}</h3>
-                    <p class="companyName">${exp.company}</p>
-                    <p class="dateRange">${exp.date}</p>
-                    <ul class="description">${descriptionPoints}</ul>
-                `;
-                experiencesGrid.appendChild(item);
+                    <div class="timelineContent">
+                        <h3>${exp.title}</h3>
+                        <p class="companyName">${exp.company}</p>
+                        <p class="dateRange">${exp.date}</p>
+                        <ul class="description">${descriptionPoints}</ul>
+                    </div>`;
+                experiencesTimeline.appendChild(item);
             });
         }
 
         function loadPublicProjects() {
             projectsGrid.innerHTML = '';
             if (projects.length === 0) {
-                projectsGrid.innerHTML = '<p>No projects featured yet. Stay tuned for exciting updates!</p>';
-                return;
+                projectsGrid.innerHTML = '<p style="text-align:center;">No projects featured yet.</p>'; return;
             }
             projects.forEach(proj => {
-                const card = document.createElement('div');
-                card.classList.add('projectCard');
+                const card = document.createElement('div'); card.classList.add('projectCard');
                 const techList = proj.tech.split(',').map(t => `<li>${t.trim()}</li>`).join('');
-                const imageSrc = proj.image || 'https://via.placeholder.com/400x250.png?text=Project';
-
+                const imageSrc = proj.image || `https://via.placeholder.com/400x250.png?text=${encodeURIComponent(proj.title)}`;
                 card.innerHTML = `
-                    <div class="projectImageContainer">
-                        <img src="${imageSrc}" alt="${proj.title}">
-                    </div>
+                    <div class="projectImageContainer"><img src="${imageSrc}" alt="${proj.title}"></div>
                     <div class="projectInfo">
                         <h3>${proj.title}</h3>
                         <p class="description">${proj.description}</p>
                         <ul class="projectTechList">${techList}</ul>
                         <div class="projectLinks">
-                            ${proj.link ? `<a href="${proj.link}" target="_blank" rel="noopener noreferrer">Live Demo</a>` : ''}
-                            ${proj.repo ? `<a href="${proj.repo}" target="_blank" rel="noopener noreferrer">GitHub</a>` : ''}
+                            ${proj.link ? `<a href="${proj.link}" target="_blank" rel="noopener noreferrer"><svg class="icon"><use xlink:href="#icon-link"></use></svg>Live</a>` : ''}
+                            ${proj.repo ? `<a href="${proj.repo}" target="_blank" rel="noopener noreferrer"><svg class="icon"><use xlink:href="#icon-github"></use></svg>Repo</a>` : ''}
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 projectsGrid.appendChild(card);
             });
         }
 
         // --- Scroll to Top Button ---
-        scrollTopBtn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
+        scrollTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
-
-        // --- Nav Link Smooth Scroll & Active State ---
+        // --- Nav Link Smooth Scroll (for internal page links) ---
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
-                e.preventDefault();
                 const targetId = this.getAttribute('href');
-                const targetSection = document.querySelector(targetId);
-                if (targetSection) {
-                     // Calculate position considering the fixed navbar height
-                    const navHeight = mainNav.offsetHeight;
-                    const targetPosition = targetSection.offsetTop - navHeight +1; // +1 to ensure it triggers correctly
-
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-
-                    // Update active class immediately for responsiveness
-                    navLinks.forEach(lnk => lnk.classList.remove('activeSectionLink'));
-                    this.classList.add('activeSectionLink');
+                if (targetId.startsWith('#') && targetId.length > 1) { // Ensure it's an internal hash link
+                    e.preventDefault();
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        const navHeight = mainNav.offsetHeight;
+                        const targetPosition = targetSection.offsetTop - navHeight + 1;
+                        window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                        // Update hash, which will also call activateInitialSection via handleHashChange listener
+                        if(window.location.hash !== targetId) window.location.hash = targetId;
+                        else activateInitialSection(targetId); // if hash is already set, manually update active states
+                    }
                 }
             });
         });
 
-
         // --- Initialization ---
+        window.addEventListener('hashchange', handleHashChange);
+        window.addEventListener('scroll', handleScroll);
+
+        // Initial page load logic
         loadPublicExperiences();
         loadPublicProjects();
-        window.addEventListener('scroll', handleScroll);
-        activateInitialSection(); // Activate current section on load/refresh
+        updateView(window.location.hash || '#homeSection'); // Initial view based on hash or default to home
+        if (!window.location.hash || window.location.hash === '#') { // If no hash, set to home for proper nav highlighting
+            window.location.hash = '#homeSection';
+        } else {
+            activateInitialSection(window.location.hash); // Ensure correct section is active and scrolled to.
+        }
 
     });
     </script>
 </body>
 </html>
+
