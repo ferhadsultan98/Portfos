@@ -3,1279 +3,1232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farhad - Frontend Developer Portfolio</title>
+    <title>Frontend Developer Portfolio</title>
     <style>
-        /* --- CSS Variables for Tech/Geometric Themes --- */
+        /* Global Styles & Resets */
         :root {
-            --backgroundColor: #0a0a0a; /* Very Dark Background */
-            --textColor: #e0e0e0; /* Light Grey Text */
-            --primaryAccentColor: #00ffff; /* Cyan/Aqua Tech Glow/Highlight */
-            --secondaryAccentColor: #666666; /* Medium Grey for Borders/Details */
-            --cardBackground: #1a1a1a; /* Dark Card Background */
-            --headerBackground: rgba(10, 10, 10, 0.9); /* Semi-transparent Dark Header */
-            --dividerColor: #333; /* Darker Divider */
-            --sunColor: rgba(255, 255, 0, 0.1); /* Subtle Yellow for Light Mode Sun */
-            --planetBaseColor: #555; /* Base Grey for Planets */
-            --planetShadowColor1: rgba(30, 30, 30, 0.5); /* Shadow for depth */
-             --planetShadowColor2: rgba(80, 80, 80, 0.3); /* Lighter shadow */
-             --planetGlowColor: rgba(0, 255, 255, 0.05); /* Subtle glow */
-
-
-            /* Code syntax colors (adjust for dark/light contrast) */
-            --codeKeywordColor: #e06c75; /* Reddish */
-            --codeStringColor: #98c379; /* Greenish */
-            --codeCommentColor: #5c6370; /* Grey */
-            --codeDefaultColor: #e0e0e0; /* Light text */
-            --codeCursorColor: #e0e0e0; /* Cursor color */
+            --primaryColor: #0a192f; /* Deep Navy */
+            --secondaryColor: #64ffda; /* Bright Aqua */
+            --lightestNavy: #233554;
+            --lightNavy: #112240;
+            --slate: #8892b0;
+            --lightSlate: #a8b2d1;
+            --lightestSlate: #ccd6f6;
+            --white: #e6f1ff;
+            --fontSans: 'Calibri', 'San Francisco', 'SF Pro Text', -apple-system, system-ui, sans-serif;
+            --fontMono: 'SF Mono', 'Fira Code', 'Fira Mono', 'Roboto Mono', monospace;
+            --transitionSpeed: 0.3s;
         }
 
-        body.darkMode {
-             /* Dark mode is the default theme now */
-             /* No changes needed here if dark is base */
-        }
-
-         body.lightMode { /* Define Light Mode explicitly */
-             --backgroundColor: #f4f4f4; /* Light Grey Background */
-             --textColor: #1a1a1a; /* Dark Text */
-             --primaryAccentColor: #007bff; /* Blue Accent */
-             --secondaryAccentColor: #cccccc; /* Light Grey for Borders/Details */
-             --cardBackground: #ffffff; /* White Card Background */
-             --headerBackground: rgba(244, 244, 244, 0.9); /* Semi-transparent Light Header */
-             --dividerColor: #ddd; /* Light Divider */
-             --sunColor: rgba(255, 255, 0, 0.2); /* More visible Sun */
-             --planetBaseColor: #aaa; /* Base Light Grey for Planets */
-             --planetShadowColor1: rgba(200, 200, 200, 0.5);
-             --planetShadowColor2: rgba(180, 180, 180, 0.3);
-             --planetGlowColor: rgba(0, 123, 255, 0.05); /* Subtle blue glow */
-
-             /* Code syntax colors for light mode */
-             --codeKeywordColor: #a31515; /* Dark Red */
-             --codeStringColor: #008000; /* Dark Green */
-             --codeCommentColor: #008000; /* Dark Green Italic */
-             --codeDefaultColor: #1a1a1a; /* Dark text */
-             --codeCursorColor: #1a1a1a; /* Cursor color */
-         }
-
-
-        /* --- Base Styles --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Arial', sans-serif; /* Consider importing 'Roboto Mono' or similar */
-            background-color: var(--backgroundColor);
-            color: var(--textColor);
-            line-height: 1.6;
-            transition: background-color 0.6s ease, color 0.6s ease;
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
+        html {
+            scroll-behavior: smooth; /* For smooth scroll on nav links */
         }
 
-         a {
-             color: var(--primaryAccentColor);
-             text-decoration: none;
-             transition: color 0.3s ease;
-         }
-         a:hover {
-             color: var(--secondaryAccentColor);
-         }
+        body {
+            font-family: var(--fontSans);
+            background-color: var(--primaryColor);
+            color: var(--slate);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
 
-        /* --- Space Background with Planet Simulation --- */
-        .backgroundContainer {
+        /* Navigation */
+        .mainNav {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            z-index: -2;
-            overflow: hidden;
-            background: var(--backgroundColor);
-            transition: background-color 0.6s ease;
-        }
-
-        .animatedPlanet {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            /* Simulate spherical shape with gradients and shadows */
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0) 50%), var(--planetBaseColor);
-            box-shadow:
-                0 0 20px var(--planetGlowColor), /* Subtle glow */
-                inset 10px 10px 20px var(--planetShadowColor1),
-                inset -10px -10px 20px var(--planetShadowColor2);
-            transition: background 0.6s ease, box-shadow 0.6s ease; /* Smooth theme change */
-        }
-
-        /* Define planet sizes and initial positions */
-        /* Increased animation durations for smoother, slower movement across the vast "space" */
-        .planetOne { width: 150px; height: 150px; top: 120%; left: 10%; animation: planetPathOne 180s linear infinite; }
-        .planetTwo { width: 120px; height: 120px; top: -20%; left: 80%; animation: planetPathTwo 200s linear infinite; }
-        .planetThree { width: 200px; height: 200px; top: 150%; left: 60%; animation: planetPathThree 220s linear infinite; }
-        .planetFour { width: 90px; height: 90px; top: -10%; left: 30%; animation: planetPathFour 160s linear infinite; }
-         /* Add more planets with unique classes, sizes, positions, and animation names */
-
-
-        /* Keyframes for planet paths */
-        @keyframes planetPathOne {
-            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.6; }
-            50% { transform: translate(calc(100vw - 300px), calc(-150vh + 300px)) rotate(180deg); opacity: 0.3; } /* Move up-right */
-            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.6; } /* Reset for loop */
-        }
-         @keyframes planetPathTwo {
-            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.7; }
-            50% { transform: translate(calc(-100vw + 240px), calc(150vh - 240px)) rotate(180deg); opacity: 0.5; } /* Move down-left */
-            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.7; }
-        }
-         @keyframes planetPathThree {
-             0% { transform: translate(0, 0) rotate(0deg); opacity: 0.5; }
-             40% { transform: translate(calc(-50vw + 400px), calc(-100vh + 400px)) rotate(140deg); opacity: 0.3; } /* Example diagonal path */
-             80% { transform: translate(calc(50vw - 400px), calc(100vh - 400px)) rotate(280deg); opacity: 0.3; }
-             100% { transform: translate(0, 0) rotate(360deg); opacity: 0.5; }
-         }
-         @keyframes planetPathFour {
-              0% { transform: translate(0, 0) rotate(0deg); opacity: 0.8; }
-              30% { transform: translate(0, 50vh) rotate(90deg); opacity: 0.6; }
-              70% { transform: translate(calc(100vw - 180px), 100vh) rotate(270deg); opacity: 0.4;}
-              100% { transform: translate(0, 0) rotate(360deg); opacity: 0.8; }
-         }
-
-
-        /* Light Mode Sun Effect */
-        body:not(.lightMode) .sunGradient { /* Hide in dark mode */
-            opacity: 0;
-        }
-
-        .sunGradient {
-            position: absolute;
-            top: 0; /* Position the sun */
-            left: 0;
-            width: 800px; /* Size of the gradient effect */
-            height: 800px;
-            background: radial-gradient(circle, var(--sunColor) 0%, transparent 70%);
-            pointer-events: none;
-            transition: opacity 0.6s ease;
-            opacity: 0; /* Initially hidden */
-             transform: translate(-400px, -400px); /* Center the gradient source */
-            z-index: -1; /* Between background and content */
-        }
-         body.lightMode .sunGradient {
-             opacity: 1; /* Visible in light mode */
-         }
-
-
-        /* --- Header and Navigation --- */
-        .siteHeader {
-            position: sticky;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--headerBackground);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 100;
-            padding: 1rem 2rem;
-            border-bottom: 1px solid var(--dividerColor);
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
-            transition: background-color 0.6s ease, border-color 0.6s ease;
+            padding: 20px 40px;
+            background-color: rgba(10, 25, 47, 0.85); /* primaryColor with transparency */
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: top var(--transitionSpeed) ease-in-out;
         }
 
-        .siteLogo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primaryAccentColor);
-            text-shadow: 0 0 5px var(--primaryAccentColor); /* Subtle glow */
-            transition: color 0.6s ease, text-shadow 0.6s ease;
+        .mainNav.navHidden {
+            top: -100px;
         }
 
-        .navList {
+        .mainNav ul {
             list-style: none;
             display: flex;
-            align-items: center;
         }
 
-        .navItem {
-            margin-left: 2rem;
+        .mainNav ul li {
+            margin-left: 25px;
         }
 
-        .navLink {
+        .mainNav ul li a {
             text-decoration: none;
-            color: var(--textColor);
-            font-weight: bold;
-            transition: color 0.3s ease;
-            position: relative;
-            padding-bottom: 5px;
+            color: var(--lightestSlate);
+            font-weight: 500;
+            padding: 10px;
+            transition: color var(--transitionSpeed) ease;
         }
 
-        .navLink::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: var(--primaryAccentColor);
-            box-shadow: 0 0 5px var(--primaryAccentColor); /* Glow effect */
-            transition: width 0.3s ease, background-color 0.6s ease, box-shadow 0.6s ease;
+        .mainNav ul li a:hover,
+        .mainNav ul li a.activeSectionLink {
+            color: var(--secondaryColor);
         }
 
-        .navLink:hover::after,
-        .navLink.active::after {
+        /* Page Sections General Styling */
+        .pageSection {
+            min-height: 100vh; /* Full viewport height */
             width: 100%;
-        }
-
-        .navLink:hover {
-            color: var(--primaryAccentColor);
-        }
-
-        .themeToggle {
-            background: none;
-            border: none;
-            color: var(--textColor);
-            font-size: 1.5rem;
-            cursor: pointer;
-            margin-left: 1.5rem;
-            transition: color 0.3s ease, transform 0.3s ease;
-        }
-
-        .themeToggle:hover {
-            color: var(--primaryAccentColor);
-            transform: rotate(360deg); /* Full rotation */
-        }
-
-         .menuToggle {
-            display: none; /* Hidden by default on larger screens */
-            background: none;
-            border: none;
-            color: var(--textColor);
-            font-size: 2rem;
-            cursor: pointer;
-            transition: color 0.3s ease;
-        }
-         .menuToggle:hover {
-            color: var(--primaryAccentColor);
-         }
-
-
-        /* --- Main Content and Sections --- */
-        .mainContent {
-            padding: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .contentSection {
-            padding: 8rem 0;
-            min-height: 100vh;
+            padding: 100px 50px 50px; /* Top padding for nav, side and bottom padding */
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative;
-            /* Add subtle background patterns per section if desired */
-             /* background-image: linear-gradient(0deg, transparent 98%, var(--secondaryAccentColor) 98%); */
-             /* background-size: 100% 50px; */
+            align-items: center;
+            text-align: center;
+            position: relative; /* For parallax effect and z-indexing */
+            opacity: 0; /* Initially hidden for entry animation */
+            transform: translateY(50px); /* Initial position for entry animation */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            z-index: 1; /* Base z-index */
+        }
+
+        .pageSection.isActive {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .sectionTitle {
-            text-align: center;
-            font-size: 3rem;
-            margin-bottom: 3rem;
-            color: var(--primaryAccentColor);
+            font-size: 2.5rem;
+            color: var(--lightestSlate);
+            margin-bottom: 10px;
             position: relative;
-            padding-bottom: 1rem;
-             text-shadow: 0 0 8px var(--primaryAccentColor); /* Glow */
-             transition: color 0.6s ease, text-shadow 0.6s ease;
+            padding-bottom: 10px;
         }
 
-         .sectionTitle::after {
+        .sectionTitle::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background-color: var(--secondaryAccentColor);
-            border-radius: 3px;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondaryColor);
         }
 
-
-        /* --- Home Section (Hero) - New Tech Design --- */
-        .heroSection {
-            text-align: center; /* Centered text */
-            padding-top: 10rem;
-            min-height: calc(100vh - 80px);
-            display: flex;
-            flex-direction: column; /* Stacked layout */
-            align-items: center;
-            justify-content: center;
-            gap: 2rem;
+        .sectionSubtitle {
+            font-size: 1.2rem;
+            color: var(--secondaryColor);
+            margin-bottom: 40px;
         }
 
-         .heroContent {
-             max-width: 800px; /* Limit width */
-             width: 100%;
-         }
-        .heroSection h1 {
-            font-size: 4.5rem;
-            margin-bottom: 1rem;
-            color: var(--primaryAccentColor);
+        .contentWrapper {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        /* Parallax-like Scrolling: Sections "slide over" */
+        /* This is achieved by z-index and JavaScript-controlled visibility.
+           A more complex JS solution would be needed for true continuous sliding.
+           This approach makes sections appear on top of each other as you scroll.
+           We use JS to activate sections and control their z-index. */
+
+        #homeSection { z-index: 5; background: linear-gradient(135deg, var(--primaryColor) 0%, var(--lightNavy) 100%); }
+        #aboutSection { z-index: 4; background: linear-gradient(135deg, var(--lightNavy) 0%, #1a3a6d 100%); } /* Slightly different shade */
+        #experiencesSection { z-index: 3; background: linear-gradient(135deg, #1a3a6d 0%, var(--lightestNavy) 100%); }
+        #projectsSection { z-index: 2; background: linear-gradient(135deg, var(--lightestNavy) 0%, #2a4a7d 100%); }
+        #contactSection { z-index: 1; background: linear-gradient(135deg, #2a4a7d 0%, var(--primaryColor) 100%); }
+
+
+        /* Home Section */
+        .homeSection {
+            text-align: left;
+            align-items: flex-start; /* Align content to the start for a common hero layout */
+            padding-left: 10%; /* More padding on the left for hero text */
+            padding-right: 10%;
+        }
+
+        .homeSection h1 {
+            font-size: clamp(40px, 8vw, 80px); /* Responsive font size */
+            color: var(--lightestSlate);
+            margin: 0;
             line-height: 1.1;
-             text-shadow: 0 0 15px var(--primaryAccentColor); /* Stronger glow */
-             transition: color 0.6s ease, text-shadow 0.6s ease;
         }
 
-         .heroSection p {
-            font-size: 1.8rem;
-            margin-bottom: 2.5rem;
-            color: var(--textColor);
-            opacity: 0.9;
-         }
+        .homeSection .nameHighlight {
+            color: var(--secondaryColor);
+        }
+
+        .homeSection .subHeading {
+            font-size: clamp(20px, 4vw, 30px);
+            color: var(--slate);
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .homeSection .introParagraph {
+            font-size: 1.1rem;
+            color: var(--lightSlate);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
 
         .ctaButton {
             display: inline-block;
-            background: linear-gradient(45deg, var(--primaryAccentColor), var(--secondaryAccentColor)); /* Gradient */
-            color: var(--cardBackground); /* Text color contrasts with gradient */
-            padding: 1rem 2.5rem;
+            padding: 15px 30px;
+            border: 1px solid var(--secondaryColor);
+            color: var(--secondaryColor);
             text-decoration: none;
-            border-radius: 5px;
-            font-size: 1.3rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 0 10px var(--primaryAccentColor); /* Initial glow */
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: background-color var(--transitionSpeed) ease, color var(--transitionSpeed) ease;
         }
 
         .ctaButton:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 20px var(--primaryAccentColor), 0 0 30px var(--secondaryAccentColor); /* Enhanced glow */
+            background-color: var(--secondaryColor);
+            color: var(--primaryColor);
         }
 
-        /* --- About Section - New Tech Design --- */
-         .aboutContent {
-            display: grid;
-            grid-template-columns: 1fr 1fr; /* Simple two columns */
-            gap: 4rem;
-            align-items: start;
-         }
-         .aboutText { /* This div now wraps only the paragraph below the code block */
-            font-size: 1.1rem;
-         }
-          .aboutText p {
-              margin-bottom: 1.5rem;
-          }
+        /* About Section */
+        .aboutSection .contentWrapper {
+            display: flex;
+            flex-direction: column; /* Stack on small screens */
+            align-items: center;
+            gap: 40px;
+        }
+        @media (min-width: 768px) {
+            .aboutSection .contentWrapper {
+                flex-direction: row; /* Side-by-side on larger screens */
+                text-align: left;
+            }
+        }
 
-         .aboutSkills {
-             border-left: 1px solid var(--dividerColor);
-             padding-left: 4rem;
-         }
-         .aboutSkills h3 {
-            margin-bottom: 1.5rem;
-            color: var(--primaryAccentColor);
-            font-size: 1.8rem;
-         }
-         .skillList {
+        .aboutText {
+            flex: 2;
+            font-size: 1.1rem;
+            color: var(--lightSlate);
+        }
+
+        .aboutText p {
+            margin-bottom: 15px;
+        }
+
+        .skillsList {
             list-style: none;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 1rem;
-         }
-         .skillItem {
-            background-color: var(--cardBackground);
-            padding: 0.8rem;
-            border-radius: 5px;
-            text-align: center;
-            border: 1px solid var(--secondaryAccentColor);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease, border-color 0.6s ease;
-             font-weight: bold;
-             font-size: 0.9rem;
-             position: relative;
-             overflow: hidden;
-         }
+            grid-template-columns: repeat(2, minmax(140px, 200px));
+            gap: 10px;
+            margin-top: 20px;
+            padding: 0;
+        }
 
-          .skillItem::before { /* Subtle tech border effect */
-              content: '';
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              border: 2px solid transparent;
-              transition: border-color 0.3s ease;
-              pointer-events: none;
-          }
-         .skillItem:hover::before {
-             border-color: var(--primaryAccentColor);
-         }
+        .skillsList li {
+            position: relative;
+            padding-left: 20px;
+            font-family: var(--fontMono);
+            font-size: 0.9rem;
+            color: var(--slate);
+        }
 
-         .skillItem:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-         }
+        .skillsList li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--secondaryColor);
+        }
 
-        /* Typing Animation Specific Styles */
-         .aboutCodeBlock {
-             font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
-             white-space: pre-wrap;
-             word-break: break-word;
-             background-color: var(--cardBackground);
-             padding: 2rem;
-             border-radius: 8px;
-             border: 1px solid var(--secondaryAccentColor);
-             line-height: 1.8;
-             margin-bottom: 2rem; /* Space below code block if text follows */
-             overflow: hidden;
-             position: relative;
-             transition: background-color 0.6s ease, border-color 0.6s ease;
-             font-size: 1rem;
-             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-         }
+        .aboutImageContainer {
+            flex: 1;
+            max-width: 300px; /* Max width for the image */
+            width: 100%;
+        }
+
+        .aboutImageContainer img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid var(--secondaryColor);
+            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+        }
 
 
-         .aboutCodeBlock span {
-            opacity: 0;
-            transition: opacity 0s;
-         }
-          .aboutCodeBlock span.visible {
-             opacity: 1;
-             transition: opacity 0.03s linear;
-          }
-
-         /* Syntax Highlighting Classes (for JS to add) */
-         .aboutCodeBlock .keyword { color: var(--codeKeywordColor); font-weight: bold; }
-         .aboutCodeBlock .string { color: var(--codeStringColor); }
-         .aboutCodeBlock .comment { color: var(--codeCommentColor); font-style: italic; }
-         .aboutCodeBlock .default { color: var(--codeDefaultColor); }
-
-
-         /* Blinking cursor */
-         .aboutCodeBlock::after {
-             content: '_';
-             display: inline;
-             color: var(--codeCursorColor);
-             animation: blink 0.7s infinite steps(1);
-             font-weight: normal;
-         }
-          .aboutCodeBlock.typingComplete::after {
-              content: '';
-              animation: none;
-          }
-         @keyframes blink {
-             0%, 100% { opacity: 1; }
-             50% { opacity: 0; }
-         }
-
-
-        /* --- Projects Section - New Tech Design --- */
-        .projectGrid {
+        /* Experiences Section */
+        .experiencesGrid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .experienceItem {
+            background-color: var(--lightNavy);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+            transition: transform var(--transitionSpeed) ease, box-shadow var(--transitionSpeed) ease;
+            text-align: left;
+        }
+
+        .experienceItem:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(2,12,27,0.8);
+        }
+
+        .experienceItem h3 {
+            color: var(--lightestSlate);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .experienceItem .companyName {
+            color: var(--secondaryColor);
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .experienceItem .dateRange {
+            color: var(--lightSlate);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            font-family: var(--fontMono);
+        }
+
+        .experienceItem .description {
+            color: var(--slate);
+            font-size: 1rem;
+        }
+
+        /* Projects Section */
+        .projectsGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
         }
 
         .projectCard {
-            background-color: var(--cardBackground);
+            background-color: var(--lightNavy);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease;
-            border: 1px solid var(--secondaryAccentColor);
+            box-shadow: 0 10px 30px -15px rgba(2,12,27,0.7);
+            transition: transform var(--transitionSpeed) ease, box-shadow var(--transitionSpeed) ease;
             display: flex;
             flex-direction: column;
-             position: relative; /* For pseudo-elements */
-             z-index: 0;
+            text-align: left;
         }
 
-         .projectCard::before { /* Angular border effect */
-             content: '';
-             position: absolute;
-             top: -5px;
-             left: -5px;
-             right: -5px;
-             bottom: -5px;
-             border: 3px solid transparent;
-             border-image: linear-gradient(45deg, var(--primaryAccentColor) 0%, transparent 50%, var(--primaryAccentColor) 100%) 1;
-             transition: border-image 0.3s ease;
-             opacity: 0;
-             z-index: -1;
-         }
-         .projectCard:hover::before {
-             opacity: 1;
-         }
-
-
         .projectCard:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.35);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -15px rgba(2,12,27,0.8);
         }
 
         .projectImageContainer {
-            position: relative;
+            width: 100%;
+            height: 200px; /* Fixed height for image container */
+            background-color: var(--lightestNavy); /* Placeholder background */
             overflow: hidden;
         }
-        .projectImage {
+
+        .projectImageContainer img {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.5s ease;
+            height: 100%;
+            object-fit: cover; /* Cover the area, might crop */
+            transition: transform 0.4s ease;
         }
-        .projectCard:hover .projectImage {
-            transform: scale(1.1);
+        .projectCard:hover .projectImageContainer img {
+            transform: scale(1.05);
         }
 
         .projectInfo {
-            padding: 1.5rem;
-            flex-grow: 1;
+            padding: 20px;
+            flex-grow: 1; /* Allows this part to take remaining space */
             display: flex;
             flex-direction: column;
         }
 
-        .projectTitle {
-            font-size: 1.5rem;
-            margin-bottom: 0.8rem;
-            color: var(--primaryAccentColor);
-             text-shadow: 0 0 5px var(--primaryAccentColor); /* Subtle glow */
-             transition: color 0.6s ease, text-shadow 0.6s ease;
+        .projectInfo h3 {
+            color: var(--lightestSlate);
+            font-size: 1.3rem;
+            margin-bottom: 10px;
         }
 
-        .projectDescription {
-            margin-bottom: 1rem;
-            flex-grow: 1;
+        .projectInfo .description {
+            color: var(--slate);
             font-size: 0.95rem;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .projectTechList {
+            list-style: none;
+            padding: 0;
+            margin: 15px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .projectTechList li {
+            font-family: var(--fontMono);
+            font-size: 0.8rem;
+            color: var(--secondaryColor);
+            background-color: var(--lightestNavy);
+            padding: 3px 8px;
+            border-radius: 3px;
         }
 
         .projectLinks a {
-            display: inline-block;
-            margin-right: 1rem;
-            color: var(--secondaryAccentColor);
+            color: var(--secondaryColor);
             text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s ease, transform 0.2s ease;
-             position: relative; /* For hover effect */
-        }
-
-         .projectLinks a::after { /* Underline effect */
-             content: '';
-             position: absolute;
-             left: 0;
-             bottom: -3px;
-             width: 100%;
-             height: 1px;
-             background-color: var(--primaryAccentColor);
-             transform: scaleX(0);
-             transform-origin: bottom right;
-             transition: transform 0.3s ease;
-         }
-         .projectLinks a:hover::after {
-             transform: scaleX(1);
-             transform-origin: bottom left;
-         }
-
-        .projectLinks a:hover {
-            color: var(--primaryAccentColor);
-             transform: translateY(-2px);
-        }
-
-
-        /* --- Experiences Section - New Tech Design (Timeline Style) --- */
-         .experienceList {
-             position: relative;
-             padding-left: 60px; /* Space for timeline line and dots */
-         }
-         .experienceList::before { /* Vertical timeline line */
-             content: '';
-             position: absolute;
-             left: 20px; /* Position the line */
-             top: 0;
-             bottom: 0;
-             width: 2px;
-             background-color: var(--secondaryAccentColor);
-         }
-
-         .experienceItem {
-            background-color: var(--cardBackground);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 3rem; /* More space between items */
-            border: 1px solid var(--secondaryAccentColor);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.6s ease, border-color 0.6s ease;
-            position: relative;
-            margin-left: 0; /* Remove margin */
-         }
-
-          .experienceItem::before { /* Timeline dot */
-             content: '';
-             position: absolute;
-             left: -40px; /* Position dot on the line */
-             top: 1.8rem;
-             width: 16px;
-             height: 16px;
-             background-color: var(--primaryAccentColor);
-             border-radius: 50%;
-             border: 4px solid var(--backgroundColor); /* Border matches background */
-             z-index: 1;
-             transition: background-color 0.6s ease, border-color 0.6s ease;
-              box-shadow: 0 0 8px var(--primaryAccentColor); /* Dot glow */
-          }
-
-
-         .experienceItem:hover {
-            transform: translateY(-5px); /* Subtle lift */
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-         }
-          .experienceItem:hover::before {
-              background-color: var(--secondaryAccentColor); /* Change dot color on hover */
-               box-shadow: 0 0 12px var(--secondaryAccentColor); /* Dot glow on hover */
-          }
-
-         .experienceTitle {
-            font-size: 1.4rem;
-            color: var(--primaryAccentColor);
-            margin-bottom: 0.5rem;
-         }
-         .experienceSubtitle {
-             font-size: 1rem;
-             color: var(--textColor);
-             opacity: 0.9;
-             margin-bottom: 0.5rem;
-         }
-         .experienceDate {
-            font-size: 0.9rem;
-            color: var(--textColor);
-            opacity: 0.8;
-            margin-bottom: 1rem;
-         }
-          .experienceItem ul {
-              list-style: disc;
-              margin-left: 1.5rem;
-              color: var(--textColor);
-              opacity: 0.9;
-          }
-           .experienceItem ul li {
-               margin-bottom: 0.5rem;
-           }
-
-
-        /* --- Contact Section - New Tech Design --- */
-        .contactInfo {
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: var(--cardBackground);
-            padding: 3rem;
-            border-radius: 8px;
-            border: 1px solid var(--secondaryAccentColor);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15), 0 0 20px var(--primaryAccentColor) inset; /* Inner glow */
-            transition: background-color 0.6s ease, border-color 0.6s ease, box-shadow 0.3s ease;
-        }
-         .contactInfo:hover {
-             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 30px var(--primaryAccentColor) inset; /* Enhanced inner glow */
-         }
-        .contactInfo p {
+            margin-right: 15px;
             font-size: 1.2rem;
-            margin-bottom: 1rem;
         }
-         .contactInfo a {
-             color: var(--primaryAccentColor);
-             text-decoration: none;
-             font-weight: bold;
-             transition: color 0.3s ease, transform 0.2s ease;
-         }
-         .contactInfo a:hover {
-             color: var(--secondaryAccentColor);
-             transform: translateY(-2px);
-         }
+        .projectLinks a:hover {
+            text-decoration: underline;
+        }
+
+        /* Contact Section */
+        .contactSection .contentWrapper {
+            max-width: 700px;
+        }
+        .contactForm {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        .contactForm input,
+        .contactForm textarea {
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid var(--lightestNavy);
+            background-color: var(--lightNavy);
+            color: var(--lightestSlate);
+            font-family: var(--fontSans);
+            font-size: 1rem;
+        }
+
+        .contactForm input::placeholder,
+        .contactForm textarea::placeholder {
+            color: var(--slate);
+        }
+
+        .contactForm textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .contactForm .submitButton {
+            align-self: flex-start; /* Align button to the start */
+        }
 
 
-        /* --- Footer --- */
-        .siteFooter {
+        /* Scroll to Top Button */
+        .scrollTopButton {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--secondaryColor);
+            color: var(--primaryColor);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            z-index: 900;
+            box-shadow: 0 4px 15px rgba(100, 255, 218, 0.3);
+            transition: background-color var(--transitionSpeed) ease, opacity var(--transitionSpeed) ease, transform var(--transitionSpeed) ease;
+        }
+        .scrollTopButton:hover {
+            background-color: #52d3c0; /* Lighter aqua */
+            transform: translateY(-3px);
+        }
+        .scrollTopButton.showScrollTop {
+            display: flex;
+        }
+
+        /* Admin Panel Styles */
+        .adminLoginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .adminLoginForm {
+            background-color: var(--lightNavy);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 350px;
             text-align: center;
-            padding: 3rem;
-            margin-top: 4rem;
-            border-top: 1px solid var(--dividerColor);
-            color: var(--textColor);
-            opacity: 0.7;
-            transition: color 0.6s ease, border-color 0.6s ease;
+        }
+        .adminLoginForm h2 {
+            color: var(--lightestSlate);
+            margin-bottom: 20px;
+        }
+        .adminLoginForm input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid var(--lightestNavy);
+            background-color: var(--primaryColor);
+            color: var(--lightestSlate);
+        }
+        .adminLoginForm button {
+            padding: 12px 25px;
+            background-color: var(--secondaryColor);
+            color: var(--primaryColor);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color var(--transitionSpeed);
+        }
+        .adminLoginForm button:hover {
+            background-color: #52d3c0;
+        }
+        .adminLoginError {
+            color: #ff6b6b; /* Light red for errors */
+            margin-top: 10px;
+            font-size: 0.9rem;
         }
 
-        /* --- Scroll Animation Classes --- */
-        .animateOnScroll {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-             will-change: opacity, transform;
+        .adminPanelContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primaryColor);
+            z-index: 1999; /* Below login overlay if it's still there */
+            overflow-y: auto;
+            padding: 20px;
+            color: var(--lightestSlate);
+            display: none; /* Hidden by default */
+        }
+        .adminPanelContainer h2 {
+            color: var(--secondaryColor);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .adminSection {
+            background-color: var(--lightNavy);
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+        .adminSection h3 {
+            color: var(--lightestSlate);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--lightestNavy);
+            padding-bottom: 10px;
+        }
+        .adminForm label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--slate);
+        }
+        .adminForm input[type="text"],
+        .adminForm input[type="date"],
+        .adminForm textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--lightestNavy);
+            background-color: var(--primaryColor);
+            color: var(--lightestSlate);
+            font-family: var(--fontSans);
+        }
+        .adminForm textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .adminForm .formActions button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .adminForm .saveButton {
+            background-color: var(--secondaryColor);
+            color: var(--primaryColor);
+        }
+        .adminForm .cancelButton {
+            background-color: var(--slate);
+            color: var(--primaryColor);
         }
 
-        .animateOnScroll.isAnimated {
-            opacity: 1;
-            transform: translateY(0);
+        .adminList {
+            list-style: none;
+            padding: 0;
         }
-         /* Optional: Add variations */
-         /* .animateSlideLeft { opacity: 0; transform: translateX(-50px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; } */
-         /* .animateSlideLeft.isAnimated { opacity: 1; transform: translateX(0); } */
-
-
-        /* --- Mobile Navigation Animation --- */
-        @media (max-width: 768px) {
-            .siteHeader {
-                padding: 0.8rem 1rem;
-            }
-            .siteLogo {
-                font-size: 1.5rem;
-            }
-            .themeToggle {
-                font-size: 1.3rem;
-                 margin-left: 0.8rem;
-            }
-             .menuToggle {
-                 display: block; /* Make sure it's visible on mobile */
-                 font-size: 1.8rem;
-             }
-
-            .navList {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background-color: var(--headerBackground);
-                border-bottom: 1px solid var(--dividerColor);
-                padding: 0;
-                overflow: hidden;
-
-                 max-height: 0;
-                 transition: max-height 0.5s ease-out;
-                 z-index: 99;
-            }
-
-             .navList.navOpen {
-                 max-height: 600px;
-                 padding: 0.5rem 0;
-             }
-
-            .navItem {
-                margin: 0;
-                text-align: center;
-                padding: 0.6rem 0;
-                 border-bottom: 1px solid var(--dividerColor);
-            }
-             .navItem:last-child {
-                 border-bottom: none;
-             }
-
-            .navLink {
-                 padding: 0.3rem 0;
-                 font-size: 1rem;
-            }
-
-
-            .mainContent {
-                padding: 0.8rem;
-            }
-
-             .contentSection {
-                 padding: 5rem 0;
-                 min-height: auto;
-             }
-
-            .heroSection {
-                 flex-direction: column; /* Stack items */
-                 text-align: center; /* Center text */
-                 padding-top: 5rem;
-                 min-height: auto;
-                 gap: 1.5rem; /* Reduce gap */
-             }
-              .heroContent {
-                  min-width: auto;
-                  width: 100%;
-              }
-              .heroSection h1 {
-                  font-size: 3.5rem; /* Adjust font size */
-              }
-               .heroSection p {
-                  font-size: 1.4rem; /* Adjust font size */
-               }
-
-
-            .sectionTitle {
-                font-size: 2.3rem;
-                margin-bottom: 2rem;
-            }
-
-             .aboutContent {
-                grid-template-columns: 1fr; /* Single column grid */
-                gap: 3rem;
-             }
-             .aboutText {
-                 min-width: auto;
-             }
-             .aboutSkills {
-                min-width: auto;
-                border-left: none;
-                 border-top: 1px solid var(--dividerColor);
-                 padding-left: 0;
-                 padding-top: 3rem;
-             }
-             .aboutSkills h3 {
-                 font-size: 1.6rem;
-             }
-             .skillList {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-                gap: 0.6rem;
-             }
-             .skillItem {
-                padding: 0.6rem;
-                font-size: 0.9rem;
-             }
-
-             .aboutCodeBlock {
-                 padding: 1.5rem;
-                 font-size: 0.9rem;
-             }
-
-
-             .projectGrid {
-                 grid-template-columns: 1fr;
-                 gap: 2rem;
-             }
-
-             .projectCard {
-                 flex-direction: column;
-             }
-              .projectCard::before { /* Adjust angular border on mobile */
-                 top: -3px; left: -3px; right: -3px; bottom: -3px;
-                 border-width: 2px;
-              }
-             .projectImage {
-                 height: 160px;
-             }
-             .projectInfo {
-                 padding: 1.5rem;
-             }
-             .projectTitle {
-                 font-size: 1.4rem;
-             }
-              .projectDescription {
-                  font-size: 0.9rem;
-              }
-             .projectLinks a {
-                  font-size: 0.9rem;
-                  margin-right: 1rem;
-             }
-
-              .experienceList {
-                  padding-left: 0;
-              }
-               .experienceList::before {
-                  left: 50%;
-                  transform: translateX(-50%);
-               }
-             .experienceItem {
-                 padding: 1.5rem;
-                 margin-bottom: 2rem;
-                 margin-left: 0;
-                 text-align: center;
-             }
-              .experienceItem::before {
-                 left: 50%;
-                 transform: translateX(-50%);
-                  top: -10px;
-              }
-              .experienceTitle {
-                 font-size: 1.3rem;
-              }
-              .experienceSubtitle, .experienceDate {
-                   font-size: 0.9rem;
-              }
-              .experienceItem ul {
-                  margin-left: 0;
-                  list-style-position: inside;
-                  font-size: 0.9rem;
-              }
-                .experienceItem ul li {
-                     text-align: left;
-                     margin-bottom: 0.3rem;
-                }
-
-
-              .contactInfo {
-                  padding: 2rem;
-                  box-shadow: none;
-                  border: none;
-                  background-color: transparent;
-              }
-               .contactInfo:hover {
-                   box-shadow: none;
-               }
-               .contactInfo p {
-                  font-size: 1.1rem;
-                  margin-bottom: 1rem;
-              }
-              .contactInfo a {
-                   font-size: 1.1rem;
-              }
-
-              .siteFooter {
-                  padding: 2rem;
-                  margin-top: 3rem;
-                  font-size: 0.9rem;
-              }
+        .adminListItem {
+            background-color: var(--lightestNavy);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
+        .adminListItemContent strong { color: var(--secondaryColor); }
+        .adminListItemActions button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .editButton { background-color: #f0ad4e; color: white; } /* Orange */
+        .deleteButton { background-color: #d9534f; color: white; } /* Red */
+        .logoutButton {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: var(--secondaryColor);
+            color: var(--primaryColor);
+            border:none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Utility classes */
+        .hidden { display: none !important; }
+
     </style>
 </head>
 <body>
 
-    <div class="backgroundContainer">
-        <div class="backgroundLayer" style="background-image: radial-gradient(circle, var(--secondaryAccentColor) 1px, transparent 1px); background-size: 20px 20px; opacity: 0.05; z-index: -1;"></div>
-         <div class="backgroundLayer" style="background-image: linear-gradient(to right, var(--secondaryAccentColor) 1px, transparent 1px), linear-gradient(to bottom, var(--secondaryAccentColor) 1px, transparent 1px); background-size: 50px 50px; opacity: 0.02; z-index: -1;"></div>
+    <nav class="mainNav" id="mainNav">
+        <ul>
+            <li><a href="#homeSection" class="navLink">Home</a></li>
+            <li><a href="#aboutSection" class="navLink">About</a></li>
+            <li><a href="#experiencesSection" class="navLink">Experience</a></li>
+            <li><a href="#projectsSection" class="navLink">Projects</a></li>
+            <li><a href="#contactSection" class="navLink">Contact</a></li>
+            <li><a href="#" id="adminLoginLink">Admin</a></li>
+        </ul>
+    </nav>
 
-        <div class="animatedPlanet planetOne"></div>
-        <div class="animatedPlanet planetTwo"></div>
-        <div class="animatedPlanet planetThree"></div>
-        <div class="animatedPlanet planetFour"></div>
-         <div class="sunGradient"></div>
-
+    <div id="adminLoginOverlay" class="adminLoginOverlay hidden">
+        <div class="adminLoginForm">
+            <h2>Admin Login</h2>
+            <input type="text" id="username" placeholder="Username (admin)" autocomplete="username">
+            <input type="password" id="password" placeholder="Password (admin)" autocomplete="current-password">
+            <button id="loginButton">Login</button>
+            <p id="loginError" class="adminLoginError hidden">Invalid credentials.</p>
+        </div>
     </div>
 
-    <header class="siteHeader">
-        <div class="siteLogo">Farhad</div>
-        <nav class="siteNav">
-            <ul class="navList">
-                <li class="navItem"><a href="#home" class="navLink">Home</a></li>
-                <li class="navItem"><a href="#about" class="navLink">About</a></li>
-                <li class="navItem"><a href="#projects" class="navLink">Projects</a></li>
-                <li class="navItem"><a href="#experiences" class="navLink">Experiences</a></li>
-                <li class="navItem"><a href="#contact" class="navLink">Contact</a></li>
-            </ul>
-        </nav>
-         <button class="themeToggle" aria-label="Toggle dark or light mode">☀️</button> <button class="menuToggle" aria-label="Open mobile menu">&#9776;</button> </header>
+    <div id="adminPanel" class="adminPanelContainer">
+        <h2>Admin Panel</h2>
+        <button id="logoutButton" class="logoutButton">Logout</button>
 
-    <main class="mainContent">
-        <section id="home" class="contentSection heroSection animateOnScroll">
-            <div class="heroContent">
-                 <h1>Hello, I'm Farhad</h1>
-                 <p>A Passionate Frontend Developer Crafting Seamless Web Experiences.</p>
-                 <a href="#projects" class="ctaButton">View My Work</a>
+        <section class="adminSection">
+            <h3>Manage Experiences</h3>
+            <form id="experienceForm" class="adminForm">
+                <input type="hidden" id="experienceId">
+                <div>
+                    <label for="experienceTitle">Job Title:</label>
+                    <input type="text" id="experienceTitle" required>
+                </div>
+                <div>
+                    <label for="experienceCompany">Company:</label>
+                    <input type="text" id="experienceCompany" required>
+                </div>
+                <div>
+                    <label for="experienceDate">Date Range (e.g., Jan 2020 - Present):</label>
+                    <input type="text" id="experienceDate" required>
+                </div>
+                <div>
+                    <label for="experienceDescription">Description (comma-separated points):</label>
+                    <textarea id="experienceDescription" required></textarea>
+                </div>
+                <div class="formActions">
+                    <button type="submit" class="saveButton">Save Experience</button>
+                    <button type="button" id="cancelExperienceEdit" class="cancelButton hidden">Cancel Edit</button>
+                </div>
+            </form>
+            <ul id="experienceListAdmin" class="adminList">
+                </ul>
+        </section>
+
+        <section class="adminSection">
+            <h3>Manage Projects</h3>
+            <form id="projectForm" class="adminForm">
+                <input type="hidden" id="projectId">
+                <div>
+                    <label for="projectTitle">Project Name:</label>
+                    <input type="text" id="projectTitle" required>
+                </div>
+                <div>
+                    <label for="projectDescription">Description:</label>
+                    <textarea id="projectDescription" required></textarea>
+                </div>
+                <div>
+                    <label for="projectImage">Image URL (optional):</label>
+                    <input type="text" id="projectImage" placeholder="https://example.com/image.jpg">
+                </div>
+                <div>
+                    <label for="projectTech">Technologies (comma-separated):</label>
+                    <input type="text" id="projectTech" required>
+                </div>
+                <div>
+                    <label for="projectLink">Live Link (optional):</label>
+                    <input type="text" id="projectLink">
+                </div>
+                <div>
+                    <label for="projectRepo">Repo Link (optional):</label>
+                    <input type="text" id="projectRepo">
+                </div>
+                <div class="formActions">
+                    <button type="submit" class="saveButton">Save Project</button>
+                    <button type="button" id="cancelProjectEdit" class="cancelButton hidden">Cancel Edit</button>
+                </div>
+            </form>
+            <ul id="projectListAdmin" class="adminList">
+                </ul>
+        </section>
+    </div>
+
+    <main id="portfolioContent">
+        <section id="homeSection" class="pageSection">
+            <div class="contentWrapper">
+                <p style="color: var(--secondaryColor); font-family: var(--fontMono); margin-bottom: 20px;">Hi, my name is</p>
+                <h1 class="heroName">Your Name.</h1>
+                <h2 class="subHeading">I build things for the web.</h2>
+                <p class="introParagraph">
+                    I'm a frontend developer specializing in crafting exceptional digital experiences.
+                    Currently, I’m focused on building accessible, human-centered products and
+                    pushing the boundaries of web technology.
+                </p>
+                <a href="#projectsSection" class="ctaButton">Check out my work!</a>
             </div>
-             </section>
+        </section>
 
-        <section id="about" class="contentSection aboutSection animateOnScroll">
-            <h2 class="sectionTitle">About Me</h2>
-            <div class="aboutContent">
-                 <div class="aboutCodeBlock animateOnScroll">
-                     <span class="comment">// About Farhad</span>
-                     <span class="default"><br><br>const </span><span class="keyword">farhad</span><span class="default"> = {<br></span>
-                     <span class="default">&nbsp;&nbsp;title: </span><span class="string">'Frontend Developer'</span><span class="default">,<br></span>
-                     <span class="default">&nbsp;&nbsp;location: </span><span class="string">'Earth, Solar System'</span><span class="default">, </span><span class="comment">// Sometimes feels like Mars</span>
-                     <span class="default"><br>&nbsp;&nbsp;skills: [</span><span class="string">'HTML'</span><span class="default">, </span><span class="string">'CSS'</span><span class="default">, </span><span class="string">'JavaScript'</span><span class="default">, </span><span class="string">'React'</span><span class="default">, </span><span class="string">'Vue'</span><span class="default">, </span><span class="string">'Git'</span><span class="default">, </span><span class="string">'Responsive Design'</span><span class="default">],<br></span>
-                     <span class="default">&nbsp;&nbsp;passion: </span><span class="string">'Building intuitive and beautiful user interfaces.'</span><span class="default">,<br></span>
-                     <span class="default">&nbsp;&nbsp;approach: </span><span class="string">'Clean code, user-centric design, continuous learning.'</span><span class="default">,<br></span>
-                     <span class="default">&nbsp;&nbsp;contact: </span><span class="default">() => {<br></span>
-                     <span class="default">&nbsp;&nbsp;&nbsp;&nbsp;console.log(</span><span class="string">'Let\'s connect and build something awesome!'</span><span class="default">);<br></span>
-                     <span class="default">&nbsp;&nbsp;}</span>
-                     <span class="default"><br>};<br><br></span>
-                     <span class="comment">// Scroll down to see my work and experience!</span>
-                 </div>
-                <div class="aboutSkills animateOnScroll">
-                     <h3>Tech Stack</h3>
-                     <ul class="skillList">
-                         <li class="skillItem">HTML5</li>
-                         <li class="skillItem">CSS3</li>
-                         <li class="skillItem">JavaScript</li>
-                         <li class="skillItem">TypeScript</li>
-                         <li class="skillItem">React</li>
-                         <li class="skillItem">Vue.js</li>
-                         <li class="skillItem">Node.js (Basic)</li>
-                         <li class="skillItem">Git/GitHub</li>
-                         <li class="skillItem">Responsive Design</li>
-                         <li class="skillItem">Performance Opt.</li>
-                     </ul>
+        <section id="aboutSection" class="pageSection">
+            <div class="contentWrapper">
+                <div class="aboutText">
+                    <h2 class="sectionTitle">About Me</h2>
+                    <p>
+                        Hello! I'm [Your Name], a passionate frontend developer with a knack for creating intuitive, dynamic, and user-friendly web applications. My journey into web development started with a fascination for how websites could blend art and technology.
+                    </p>
+                    <p>
+                        I thrive on transforming complex problems into elegant solutions and continuously seek to learn and adapt to the ever-evolving landscape of web technologies. When I'm not coding, you might find me exploring new design trends, contributing to open-source projects, or [mention a hobby].
+                    </p>
+                    <p>Here are a few technologies I’ve been working with recently:</p>
+                    <ul class="skillsList">
+                        <li>JavaScript (ES6+)</li>
+                        <li>React</li>
+                        <li>Vue.js</li>
+                        <li>HTML5 & CSS3</li>
+                        <li>Sass/SCSS</li>
+                        <li>Node.js</li>
+                        {/* Add more skills */}
+                    </ul>
+                </div>
+                <div class="aboutImageContainer">
+                    <img src="https://via.placeholder.com/300x300.png?text=Your+Photo" alt="Your Name - Frontend Developer">
+                    {/* Replace with your actual photo */}
                 </div>
             </div>
         </section>
 
-        <section id="projects" class="contentSection projectsSection animateOnScroll">
-            <h2 class="sectionTitle">Projects</h2>
-            <div class="projectGrid">
-                <div class="projectCard animateOnScroll">
-                    <div class="projectImageContainer">
-                        <img src="https://via.placeholder.com/400x250/e0e0e0/333333?text=Project+1+Image" alt="Placeholder image for Project 1" class="projectImage">
-                    </div>
-                    <div class="projectInfo">
-                        <h3 class="projectTitle">Project Title One</h3>
-                        <p class="projectDescription">A brief description of Project One, highlighting its key features and technologies used. Focused on [Key Feature 1] and [Key Feature 2].</p>
-                        <div class="projectLinks">
-                            <a href="#" target="_blank">Live Demo</a>
-                            <a href="#" target="_blank">GitHub Repo</a>
-                        </div>
-                    </div>
+        <section id="experiencesSection" class="pageSection">
+            <h2 class="sectionTitle">Where I've Worked</h2>
+            <p class="sectionSubtitle">My professional journey so far.</p>
+            <div class="contentWrapper">
+                <div id="experiencesGrid" class="experiencesGrid">
+                    <p>Loading experiences...</p>
                 </div>
-                 <div class="projectCard animateOnScroll">
-                    <div class="projectImageContainer">
-                        <img src="https://via.placeholder.com/400x250/e0e0e0/333333?text=Project+2+Image" alt="Placeholder image for Project 2" class="projectImage">
-                    </div>
-                    <div class="projectInfo">
-                        <h3 class="projectTitle">Project Title Two</h3>
-                        <p class="projectDescription">A brief description of Project Two, highlighting its key features and technologies used. Built with [Tech 1] and [Tech 2].</p>
-                        <div class="projectLinks">
-                            <a href="#" target="_blank">Live Demo</a>
-                            <a href="#" target="_blank">GitHub Repo</a>
-                        }</div>
-                    </div>
-                </div>
-                 <div class="projectCard animateOnScroll">
-                    <div class="projectImageContainer">
-                        <img src="https://via.placeholder.com/400x250/e0e0e0/333333?text=Project+3+Image" alt="Placeholder image for Project 3" class="projectImage">
-                    </div>
-                    <div class="projectInfo">
-                        <h3 class="projectTitle">Project Title Three</h3>
-                        <p class="projectDescription">A brief description of Project Three, highlighting its key features and technologies used. Showcases [Concept 1] and [Concept 2].</p>
-                        <div class="projectLinks">
-                            <a href="#" target="_blank">Live Demo</a>
-                            <a href="#" target="_blank">GitHub Repo</a>
-                        </div>
-                    </div>
-                </div>
-                </div>
+            </div>
         </section>
 
-        <section id="experiences" class="contentSection experiencesSection animateOnScroll">
-            <h2 class="sectionTitle">Experiences</h2>
-             <div class="experienceList">
-                 <div class="experienceItem animateOnScroll">
-                     <h3 class="experienceTitle">Frontend Developer</h3>
-                     <p class="experienceSubtitle">Awesome Tech Company</p>
-                     <p class="experienceDate">Jan 20XX - Present</p>
-                     <ul>
-                         <li>Developed and maintained responsive web applications using modern frontend frameworks (e.g., React, Vue.js).</li>
-                         <li>Collaborated closely with UX/UI designers and backend engineers in an Agile environment.</li>
-                         <li>Improved web performance metrics through code splitting, lazy loading, and asset optimization.</li>
-                         <li>Mentored junior developers and participated in code reviews.</li>
-                     </ul>
-                 </div>
-                  <div class="experienceItem animateOnScroll">
-                     <h3 class="experienceTitle">Junior Web Developer</h3>
-                     <p class="experienceSubtitle">Creative Agency Name</p>
-                     <p class="experienceDate">Jun 20XX - Dec 20XX</p>
-                      <ul>
-                         <li>Built pixel-perfect landing pages and client websites from design mockups.</li>
-                         <li>Implemented interactive features using vanilla JavaScript.</li>
-                         <li>Contributed to code base using Git for version control and collaboration.</li>
-                         <li>Assisted in debugging and troubleshooting frontend issues.</li>
-                     </ul>
-                 </div>
-                 </div>
+        <section id="projectsSection" class="pageSection">
+            <h2 class="sectionTitle">Things I've Built</h2>
+            <p class="sectionSubtitle">A selection of my recent projects.</p>
+            <div class="contentWrapper">
+                <div id="projectsGrid" class="projectsGrid">
+                    <p>Loading projects...</p>
+                </div>
+            </div>
         </section>
 
-        <section id="contact" class="contentSection contactSection animateOnScroll">
-            <h2 class="sectionTitle">Contact</h2>
-            <div class="contactInfo">
-                <p>Ready to build something great? Let's connect!</p>
-                <p>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
-                <p>LinkedIn: <a href="https://linkedin.com/in/yourprofile" target="_blank">linkedin.com/in/yourprofile</a></p>
-                <p>GitHub: <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a></p>
-                </div>
+        <section id="contactSection" class="pageSection">
+            <h2 class="sectionTitle">Get In Touch</h2>
+            <p class="sectionSubtitle">I'm currently open to new opportunities. My inbox is always open!</p>
+            <div class="contentWrapper">
+                <form id="contactForm" class="contactForm" action="mailto:your.email@example.com" method="post" enctype="text/plain">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <textarea name="message" placeholder="Your Message" required></textarea>
+                    <button type="submit" class="ctaButton submitButton">Send Message</button>
+                </form>
+                <p style="margin-top: 30px; font-size: 0.9rem;">
+                    Alternatively, you can reach out via <a href="mailto:your.email@example.com" style="color: var(--secondaryColor);">your.email@example.com</a>.
+                </p>
+            </div>
         </section>
     </main>
 
-    <footer class="siteFooter">
-        <p>&copy; 2023 Farhad. All rights reserved.</p>
-    </footer>
+    <button id="scrollTopBtn" class="scrollTopButton">▲</button>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const themeToggle = document.querySelector('.themeToggle');
-            const body = document.body;
-            const navList = document.querySelector('.navList');
-            const menuToggle = document.querySelector('.menuToggle');
-            const navLinks = document.querySelectorAll('.navLink');
-            const sections = document.querySelectorAll('.contentSection');
-            const elementsToAnimate = document.querySelectorAll('.animateOnScroll');
-            // Parallax is now CSS animation, removed JS layer movement
-            const aboutCodeBlock = document.querySelector('.aboutCodeBlock');
-            let aboutCodeObserver;
-            let typingInterval;
-            let currentCharacterIndex = 0;
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Configuration & State ---
+        const ADMIN_USER = 'admin';
+        const ADMIN_PASS = 'admin';
+        let currentEditingExperienceId = null;
+        let currentEditingProjectId = null;
 
-            // --- Theme Toggle ---
-            const storedTheme = localStorage.getItem('theme');
-            // Default is dark mode now
-            if (storedTheme === 'lightMode') {
-                body.classList.add('lightMode');
-                 themeToggle.textContent = '🌙'; // Moon icon in light mode
+        let experiences = JSON.parse(localStorage.getItem('experiences')) || [
+            { id: 'exp1', title: 'Senior Frontend Developer', company: 'Tech Solutions Inc.', date: 'Jan 2022 - Present', description: 'Led development of responsive UIs,Mentored junior developers,Improved code quality and performance metrics' },
+            { id: 'exp2', title: 'Frontend Developer', company: 'Web Wizards LLC', date: 'Jun 2019 - Dec 2021', description: 'Developed and maintained client websites,Collaborated with backend team,Implemented new features using React and Vue' }
+        ];
+        let projects = JSON.parse(localStorage.getItem('projects')) || [
+            { id: 'proj1', title: 'E-commerce Platform', description: 'A full-featured e-commerce website with a modern UI, product listings, cart functionality, and user accounts.', image: 'https://via.placeholder.com/400x250.png?text=Project+Alpha', tech: 'React,Node.js,MongoDB,Stripe', link: '#', repo: '#' },
+            { id: 'proj2', title: 'Portfolio Website Template', description: 'A sleek and customizable portfolio template for creatives and developers. Built with vanilla JS for performance.', image: 'https://via.placeholder.com/400x250.png?text=Project+Beta', tech: 'HTML,CSS,JavaScript', link: '#', repo: '#' },
+            { id: 'proj3', title: 'Task Management App', description: 'A Kanban-style task management application to help users organize their daily tasks and projects efficiently.', image: 'https://via.placeholder.com/400x250.png?text=Project+Gamma', tech: 'Vue.js,Firebase,Vuetify', link: '#', repo: '#' }
+        ];
+
+        // --- DOM Elements ---
+        const adminLoginLink = document.getElementById('adminLoginLink');
+        const adminLoginOverlay = document.getElementById('adminLoginOverlay');
+        const loginButton = document.getElementById('loginButton');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginError = document.getElementById('loginError');
+        const adminPanel = document.getElementById('adminPanel');
+        const logoutButton = document.getElementById('logoutButton');
+        const portfolioContent = document.getElementById('portfolioContent');
+
+        const experienceForm = document.getElementById('experienceForm');
+        const experienceIdInput = document.getElementById('experienceId');
+        const experienceTitleInput = document.getElementById('experienceTitle');
+        const experienceCompanyInput = document.getElementById('experienceCompany');
+        const experienceDateInput = document.getElementById('experienceDate');
+        const experienceDescriptionInput = document.getElementById('experienceDescription');
+        const cancelExperienceEditBtn = document.getElementById('cancelExperienceEdit');
+        const experienceListAdmin = document.getElementById('experienceListAdmin');
+        const experiencesGrid = document.getElementById('experiencesGrid');
+
+        const projectForm = document.getElementById('projectForm');
+        const projectIdInput = document.getElementById('projectId');
+        const projectTitleInput = document.getElementById('projectTitle');
+        const projectDescriptionInput = document.getElementById('projectDescription');
+        const projectImageInput = document.getElementById('projectImage');
+        const projectTechInput = document.getElementById('projectTech');
+        const projectLinkInput = document.getElementById('projectLink');
+        const projectRepoInput = document.getElementById('projectRepo');
+        const cancelProjectEditBtn = document.getElementById('cancelProjectEdit');
+        const projectListAdmin = document.getElementById('projectListAdmin');
+        const projectsGrid = document.getElementById('projectsGrid');
+
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        const mainNav = document.getElementById('mainNav');
+        const navLinks = document.querySelectorAll('.navLink');
+        const pageSections = document.querySelectorAll('.pageSection');
+
+        // --- Parallax Scrolling & Section Activation ---
+        let lastScrollTop = 0;
+        function handleScroll() {
+            // Navbar hide/show
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > mainNav.offsetHeight) {
+                mainNav.classList.add('navHidden'); // Hide on scroll down
             } else {
-                body.classList.remove('lightMode'); // Ensure dark mode if no preference or preference is dark
-                themeToggle.textContent = '☀️'; // Sun icon in dark mode
+                mainNav.classList.remove('navHidden'); // Show on scroll up or at top
+            }
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
+
+            // Scroll to top button
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollTopBtn.classList.add('showScrollTop');
+            } else {
+                scrollTopBtn.classList.remove('showScrollTop');
             }
 
+            // Section activation and nav link highlighting
+            let currentSectionId = '';
+            pageSections.forEach(section => {
+                const sectionTop = section.offsetTop - mainNav.offsetHeight - 100; // Adjust offset as needed
+                const sectionBottom = sectionTop + section.offsetHeight;
 
-            themeToggle.addEventListener('click', () => {
-                body.classList.toggle('lightMode');
-                if (body.classList.contains('lightMode')) {
-                    localStorage.setItem('theme', 'lightMode');
-                    themeToggle.textContent = '🌙'; // Moon icon
+                if (scrollTop >= sectionTop && scrollTop < sectionBottom) {
+                    currentSectionId = section.id;
+                    section.classList.add('isActive'); // For entry animation
+
+                    // Parallax-like z-index management: higher sections (earlier in DOM) get higher z-index
+                    // This part is tricky for the "slide over" effect without more complex JS.
+                    // The CSS z-index already defines a base stack.
+                    // We can enhance by dynamically adjusting z-index if needed, but for now,
+                    // CSS handles the static stacking, and JS `isActive` handles fade-in.
                 } else {
-                    localStorage.setItem('theme', 'darkMode'); // Store 'darkMode'
-                    themeToggle.textContent = '☀️'; // Sun icon
+                    // section.classList.remove('isActive'); // Optional: remove if you want re-animation on scroll back
                 }
             });
 
-            // --- Mobile Menu Toggle ---
-            menuToggle.addEventListener('click', () => {
-                navList.classList.toggle('navOpen');
-                const isExpanded = navList.classList.contains('navOpen');
-                menuToggle.setAttribute('aria-expanded', isExpanded);
-            });
-
-            // Close menu when a link is clicked (on mobile)
             navLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (navList.classList.contains('navOpen')) {
-                        navList.classList.remove('navOpen');
-                         menuToggle.setAttribute('aria-expanded', false);
-                    }
-                });
+                link.classList.remove('activeSectionLink');
+                if (link.getAttribute('href') === `#${currentSectionId}`) {
+                    link.classList.add('activeSectionLink');
+                }
             });
+        }
 
-
-            // --- Smooth Scrolling ---
-             navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href').substring(1);
-                    const targetSection = document.getElementById(targetId);
-
-                    if (targetSection) {
-                        const headerHeight = document.querySelector('.siteHeader').offsetHeight;
-                        const elementPosition = targetSection.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.scrollY - headerHeight;
-
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                });
-            });
-
-
-            // --- Scroll-Triggered Animations (Intersection Observer) ---
-            const observerOptions = {
-                root: null, // Use the viewport
-                rootMargin: '0px',
-                threshold: 0.1 // Trigger when 10% visible
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('isAnimated');
-                        // Optional: Stop observing if only needed once
-                        // observer.unobserve(entry.target);
-                    } else {
-                         // Optional: Remove class when out of view to re-animate on scroll back
-                         entry.target.classList.remove('isAnimated');
-                    }
-                });
-            }, observerOptions);
-
-            // Observe generic elements for fade/slide animation
-            elementsToAnimate.forEach(el => {
-                 observer.observe(el);
-            });
-
-
-            // --- About Section Typing Animation ---
-            const typeCode = () => {
-                 const spans = aboutCodeBlock.querySelectorAll('span');
-                 const totalCharacters = spans.length;
-
-                 if (currentCharacterIndex < totalCharacters) {
-                     spans[currentCharacterIndex].classList.add('visible');
-                     currentCharacterIndex++;
-                 } else {
-                     clearInterval(typingInterval);
-                     aboutCodeBlock.classList.add('typingComplete'); // Add class to hide cursor
-                 }
-            };
-
-            const resetTyping = () => {
-                 clearInterval(typingInterval);
-                 currentCharacterIndex = 0;
-                 aboutCodeBlock.classList.remove('typingComplete');
-                 aboutCodeBlock.querySelectorAll('span').forEach(span => span.classList.remove('visible'));
-            };
-
-
-            // Observer specifically for the About section to trigger typing
-            aboutCodeObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        if (currentCharacterIndex === 0) { // Only start if not already typing/typed
-                            // Add small delay before typing starts after section is visible
-                            setTimeout(() => {
-                                typingInterval = setInterval(typeCode, 30); // Typing speed (ms per character)
-                            }, 500); // Delay before starting (ms)
+        // Initial check for section activation (e.g., if page loads on a hash)
+        function activateInitialSection() {
+            const hash = window.location.hash;
+            if (hash) {
+                const targetSection = document.querySelector(hash);
+                if (targetSection) {
+                    targetSection.classList.add('isActive');
+                     // Also highlight nav link
+                    navLinks.forEach(link => {
+                        if (link.getAttribute('href') === hash) {
+                            link.classList.add('activeSectionLink');
                         }
-                         // Optional: Unobserve if you only want it to type once
-                         // observer.unobserve(entry.target);
-                    } else {
-                        // Optional: Reset typing animation when section leaves view
-                        // resetTyping(); // Uncomment if you want it to re-type every time
-                    }
-                });
-            }, { threshold: 0.2 }); // Adjust threshold for when typing starts
-
-            // Observe the About section
-            if (aboutCodeBlock) {
-                 // Note: aboutCodeBlock itself is now animateOnScroll, its parent section is also animateOnScroll.
-                 // We want to trigger typing when aboutCodeBlock itself comes into view.
-                 aboutCodeObserver.observe(aboutCodeBlock);
+                    });
+                } else {
+                     pageSections[0]?.classList.add('isActive'); // Activate first section by default
+                     navLinks[0]?.classList.add('activeSectionLink');
+                }
+            } else {
+                 pageSections[0]?.classList.add('isActive'); // Activate first section by default
+                 navLinks[0]?.classList.add('activeSectionLink');
             }
+            handleScroll(); // Run once to set initial states
+        }
 
 
-             // --- Highlight Active Nav Link on Scroll ---
-             const highlightNavLink = () => {
-                 let activeSectionId = '';
-                 const headerHeight = document.querySelector('.siteHeader').offsetHeight;
-                 // Add header height offset + a few pixels for buffer
-                 const scrollPosition = window.scrollY + headerHeight + 50;
+        // --- Admin Panel Logic ---
+        function showAdminLogin() {
+            adminLoginOverlay.classList.remove('hidden');
+            usernameInput.focus();
+        }
 
-                 sections.forEach(section => {
-                     const sectionTop = section.offsetTop;
-                     const sectionHeight = section.offsetHeight;
-                     // Account for padding added by contentSection - A safer way is to check if scrollPosition is within the section boundaries
-                     const sectionBottom = sectionTop + sectionHeight;
+        function hideAdminLogin() {
+            adminLoginOverlay.classList.add('hidden');
+            loginError.classList.add('hidden');
+            usernameInput.value = '';
+            passwordInput.value = '';
+        }
 
-                     if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-                         activeSectionId = section.getAttribute('id');
-                     }
-                 });
+        function showAdminPanel() {
+            adminPanel.style.display = 'block';
+            portfolioContent.style.display = 'none'; /* Hide main content */
+            mainNav.style.display = 'none'; /* Hide nav */
+            document.body.style.overflow = 'hidden'; /* Prevent main page scroll */
+            loadAdminData();
+        }
 
-                 navLinks.forEach(link => {
-                     link.classList.remove('active');
-                     if (link.getAttribute('href').substring(1) === activeSectionId) {
-                         link.classList.add('active');
-                     }
-                 });
-             };
+        function hideAdminPanel() {
+            adminPanel.style.display = 'none';
+            portfolioContent.style.display = 'block'; /* Show main content */
+            mainNav.style.display = 'flex'; /* Show nav */
+            document.body.style.overflow = 'auto'; /* Restore scroll */
+            loadPublicExperiences(); // Refresh public content
+            loadPublicProjects();
+        }
 
-             // Listen for scroll events to highlight the active link
-             window.addEventListener('scroll', highlightNavLink);
-             // Also call on load to highlight the initial section (usually Home)
-             highlightNavLink();
-
+        adminLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showAdminLogin();
         });
-    </script>
 
+        loginButton.addEventListener('click', () => {
+            if (usernameInput.value === ADMIN_USER && passwordInput.value === ADMIN_PASS) {
+                hideAdminLogin();
+                showAdminPanel();
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        });
+
+        logoutButton.addEventListener('click', () => {
+            hideAdminPanel();
+        });
+
+        // Close login modal if clicked outside the form
+        adminLoginOverlay.addEventListener('click', (e) => {
+            if (e.target === adminLoginOverlay) {
+                hideAdminLogin();
+            }
+        });
+
+
+        // --- Data Persistence ---
+        function saveExperiences() {
+            localStorage.setItem('experiences', JSON.stringify(experiences));
+        }
+        function saveProjects() {
+            localStorage.setItem('projects', JSON.stringify(projects));
+        }
+
+        // --- Experience Management (Admin) ---
+        experienceForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newExperience = {
+                id: currentEditingExperienceId || `exp${Date.now()}`,
+                title: experienceTitleInput.value,
+                company: experienceCompanyInput.value,
+                date: experienceDateInput.value,
+                description: experienceDescriptionInput.value
+            };
+
+            if (currentEditingExperienceId) {
+                experiences = experiences.map(exp => exp.id === currentEditingExperienceId ? newExperience : exp);
+            } else {
+                experiences.push(newExperience);
+            }
+            saveExperiences();
+            resetExperienceForm();
+            loadAdminExperiences();
+        });
+
+        cancelExperienceEditBtn.addEventListener('click', resetExperienceForm);
+
+        function resetExperienceForm() {
+            experienceForm.reset();
+            experienceIdInput.value = '';
+            currentEditingExperienceId = null;
+            cancelExperienceEditBtn.classList.add('hidden');
+        }
+
+        function loadAdminExperiences() {
+            experienceListAdmin.innerHTML = '';
+            experiences.forEach(exp => {
+                const li = document.createElement('li');
+                li.classList.add('adminListItem');
+                li.innerHTML = `
+                    <div class="adminListItemContent">
+                        <strong>${exp.title}</strong> at ${exp.company} (${exp.date})
+                    </div>
+                    <div class="adminListItemActions">
+                        <button class="editButton" data-id="${exp.id}">Edit</button>
+                        <button class="deleteButton" data-id="${exp.id}">Delete</button>
+                    </div>
+                `;
+                experienceListAdmin.appendChild(li);
+            });
+        }
+
+        experienceListAdmin.addEventListener('click', (e) => {
+            if (e.target.classList.contains('editButton')) {
+                const id = e.target.dataset.id;
+                const expToEdit = experiences.find(exp => exp.id === id);
+                if (expToEdit) {
+                    experienceIdInput.value = expToEdit.id;
+                    experienceTitleInput.value = expToEdit.title;
+                    experienceCompanyInput.value = expToEdit.company;
+                    experienceDateInput.value = expToEdit.date;
+                    experienceDescriptionInput.value = expToEdit.description;
+                    currentEditingExperienceId = id;
+                    cancelExperienceEditBtn.classList.remove('hidden');
+                    experienceTitleInput.focus();
+                }
+            } else if (e.target.classList.contains('deleteButton')) {
+                if (confirm('Are you sure you want to delete this experience?')) {
+                    const id = e.target.dataset.id;
+                    experiences = experiences.filter(exp => exp.id !== id);
+                    saveExperiences();
+                    loadAdminExperiences();
+                }
+            }
+        });
+
+        // --- Project Management (Admin) ---
+        projectForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newProject = {
+                id: currentEditingProjectId || `proj${Date.now()}`,
+                title: projectTitleInput.value,
+                description: projectDescriptionInput.value,
+                image: projectImageInput.value,
+                tech: projectTechInput.value,
+                link: projectLinkInput.value,
+                repo: projectRepoInput.value
+            };
+
+            if (currentEditingProjectId) {
+                projects = projects.map(proj => proj.id === currentEditingProjectId ? newProject : proj);
+            } else {
+                projects.push(newProject);
+            }
+            saveProjects();
+            resetProjectForm();
+            loadAdminProjects();
+        });
+
+        cancelProjectEditBtn.addEventListener('click', resetProjectForm);
+
+        function resetProjectForm() {
+            projectForm.reset();
+            projectIdInput.value = '';
+            currentEditingProjectId = null;
+            cancelProjectEditBtn.classList.add('hidden');
+        }
+
+        function loadAdminProjects() {
+            projectListAdmin.innerHTML = '';
+            projects.forEach(proj => {
+                const li = document.createElement('li');
+                li.classList.add('adminListItem');
+                li.innerHTML = `
+                    <div class="adminListItemContent">
+                        <strong>${proj.title}</strong>
+                    </div>
+                    <div class="adminListItemActions">
+                        <button class="editButton" data-id="${proj.id}">Edit</button>
+                        <button class="deleteButton" data-id="${proj.id}">Delete</button>
+                    </div>
+                `;
+                projectListAdmin.appendChild(li);
+            });
+        }
+
+        projectListAdmin.addEventListener('click', (e) => {
+            if (e.target.classList.contains('editButton')) {
+                const id = e.target.dataset.id;
+                const projToEdit = projects.find(proj => proj.id === id);
+                if (projToEdit) {
+                    projectIdInput.value = projToEdit.id;
+                    projectTitleInput.value = projToEdit.title;
+                    projectDescriptionInput.value = projToEdit.description;
+                    projectImageInput.value = projToEdit.image || '';
+                    projectTechInput.value = projToEdit.tech;
+                    projectLinkInput.value = projToEdit.link || '';
+                    projectRepoInput.value = projToEdit.repo || '';
+                    currentEditingProjectId = id;
+                    cancelProjectEditBtn.classList.remove('hidden');
+                    projectTitleInput.focus();
+                }
+            } else if (e.target.classList.contains('deleteButton')) {
+                if (confirm('Are you sure you want to delete this project?')) {
+                    const id = e.target.dataset.id;
+                    projects = projects.filter(proj => proj.id !== id);
+                    saveProjects();
+                    loadAdminProjects();
+                }
+            }
+        });
+
+        function loadAdminData() {
+            loadAdminExperiences();
+            loadAdminProjects();
+        }
+
+        // --- Public Content Display ---
+        function loadPublicExperiences() {
+            experiencesGrid.innerHTML = '';
+            if (experiences.length === 0) {
+                experiencesGrid.innerHTML = '<p>No professional experiences listed yet. Check back soon!</p>';
+                return;
+            }
+            experiences.forEach(exp => {
+                const item = document.createElement('div');
+                item.classList.add('experienceItem');
+                let descriptionPoints = exp.description.split(',').map(point => `<li>${point.trim()}</li>`).join('');
+                item.innerHTML = `
+                    <h3>${exp.title}</h3>
+                    <p class="companyName">${exp.company}</p>
+                    <p class="dateRange">${exp.date}</p>
+                    <ul class="description">${descriptionPoints}</ul>
+                `;
+                experiencesGrid.appendChild(item);
+            });
+        }
+
+        function loadPublicProjects() {
+            projectsGrid.innerHTML = '';
+            if (projects.length === 0) {
+                projectsGrid.innerHTML = '<p>No projects featured yet. Stay tuned for exciting updates!</p>';
+                return;
+            }
+            projects.forEach(proj => {
+                const card = document.createElement('div');
+                card.classList.add('projectCard');
+                const techList = proj.tech.split(',').map(t => `<li>${t.trim()}</li>`).join('');
+                const imageSrc = proj.image || 'https://via.placeholder.com/400x250.png?text=Project';
+
+                card.innerHTML = `
+                    <div class="projectImageContainer">
+                        <img src="${imageSrc}" alt="${proj.title}">
+                    </div>
+                    <div class="projectInfo">
+                        <h3>${proj.title}</h3>
+                        <p class="description">${proj.description}</p>
+                        <ul class="projectTechList">${techList}</ul>
+                        <div class="projectLinks">
+                            ${proj.link ? `<a href="${proj.link}" target="_blank" rel="noopener noreferrer">Live Demo</a>` : ''}
+                            ${proj.repo ? `<a href="${proj.repo}" target="_blank" rel="noopener noreferrer">GitHub</a>` : ''}
+                        </div>
+                    </div>
+                `;
+                projectsGrid.appendChild(card);
+            });
+        }
+
+        // --- Scroll to Top Button ---
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+
+        // --- Nav Link Smooth Scroll & Active State ---
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                if (targetSection) {
+                     // Calculate position considering the fixed navbar height
+                    const navHeight = mainNav.offsetHeight;
+                    const targetPosition = targetSection.offsetTop - navHeight +1; // +1 to ensure it triggers correctly
+
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+
+                    // Update active class immediately for responsiveness
+                    navLinks.forEach(lnk => lnk.classList.remove('activeSectionLink'));
+                    this.classList.add('activeSectionLink');
+                }
+            });
+        });
+
+
+        // --- Initialization ---
+        loadPublicExperiences();
+        loadPublicProjects();
+        window.addEventListener('scroll', handleScroll);
+        activateInitialSection(); // Activate current section on load/refresh
+
+    });
+    </script>
 </body>
 </html>
